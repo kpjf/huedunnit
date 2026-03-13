@@ -284,6 +284,7 @@ class MastermindUI {
         this.createColorButtons();
         this.renderGameBoard();
         this.updateGameStatus();
+        this.displaySeedPhrase();
     }
 
     /**
@@ -481,6 +482,20 @@ class MastermindUI {
     }
 
     /**
+     * Display the current seed phrase at the top
+     */
+    displaySeedPhrase() {
+        const seedDisplay = document.getElementById('seedDisplay');
+        if (this.currentSeed) {
+            seedDisplay.textContent = `Seed: ${this.currentSeed}`;
+            seedDisplay.classList.add('active');
+        } else {
+            seedDisplay.textContent = 'No seed - each game is random';
+            seedDisplay.classList.remove('active');
+        }
+    }
+
+    /**
      * Start a new game with a specific seed
      * @param {string} seed - Seed phrase for code generation
      */
@@ -501,16 +516,14 @@ class MastermindUI {
             this.toggleDarkMode();
         });
 
-        // Seed input button
+        // Seed phrase button - opens a prompt
         document.getElementById('setSeedBtn').addEventListener('click', () => {
-            this.handleSetSeed();
+            this.promptForSeed();
         });
 
-        // Allow Enter key in seed input
-        document.getElementById('seedInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                this.handleSetSeed();
-            }
+        // Random game button
+        document.getElementById('randomBtn').addEventListener('click', () => {
+            this.newGameWithSeed(null);
         });
 
         // Submit guess button
@@ -526,13 +539,16 @@ class MastermindUI {
 
         // New game button
         document.getElementById('newGameBtn').addEventListener('click', () => {
-            document.getElementById('seedInput').value = '';
-            this.newGame();
+            if (this.currentSeed) {
+                this.newGameWithSeed(this.currentSeed);
+            } else {
+                this.newGame();
+            }
         });
 
         // Allow Enter key to submit guess
         document.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !this.game.isGameOver() && e.target.id !== 'seedInput') {
+            if (e.key === 'Enter' && !this.game.isGameOver()) {
                 this.submitGuess();
             }
         });
@@ -569,13 +585,15 @@ class MastermindUI {
     }
 
     /**
-     * Handle seed input and start new game
+     * Prompt the user for a seed phrase
      */
-    handleSetSeed() {
-        const seedInput = document.getElementById('seedInput');
-        const seed = seedInput.value.trim();
-        this.newGameWithSeed(seed || null);
-        // Keep the seed in the input for reference
+    promptForSeed() {
+        const currentSeed = this.currentSeed || '';
+        const seed = prompt('Enter a seed phrase for a reproducible game:', currentSeed);
+        
+        if (seed !== null) {  // User didn't cancel
+            this.newGameWithSeed(seed || null);
+        }
     }
 
     /**
