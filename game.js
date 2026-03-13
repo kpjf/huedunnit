@@ -272,6 +272,7 @@ class MastermindUI {
     constructor(seed = null) {
         this.currentSeed = seed;
         this.game = new Mastermind(seed);
+        this.initializeDarkMode();
         this.initializeUI();
         this.attachEventListeners();
     }
@@ -495,6 +496,11 @@ class MastermindUI {
      * Attach event listeners to buttons
      */
     attachEventListeners() {
+        // Dark mode toggle
+        document.getElementById('darkModeBtn').addEventListener('click', () => {
+            this.toggleDarkMode();
+        });
+
         // Seed input button
         document.getElementById('setSeedBtn').addEventListener('click', () => {
             this.handleSetSeed();
@@ -530,6 +536,36 @@ class MastermindUI {
                 this.submitGuess();
             }
         });
+    }
+
+    /**
+     * Toggle dark mode on/off
+     */
+    toggleDarkMode() {
+        const html = document.documentElement;
+        const isDarkMode = html.classList.toggle('dark-mode');
+        localStorage.setItem('mastermind-darkMode', isDarkMode);
+        this.updateDarkModeIcon();
+    }
+
+    /**
+     * Update dark mode icon based on current state
+     */
+    updateDarkModeIcon() {
+        const btn = document.getElementById('darkModeBtn');
+        const isDarkMode = document.documentElement.classList.contains('dark-mode');
+        btn.querySelector('.dark-mode-icon').textContent = isDarkMode ? '☀️' : '🌙';
+    }
+
+    /**
+     * Initialize dark mode from localStorage
+     */
+    initializeDarkMode() {
+        const isDarkMode = localStorage.getItem('mastermind-darkMode') === 'true';
+        if (isDarkMode) {
+            document.documentElement.classList.add('dark-mode');
+        }
+        this.updateDarkModeIcon();
     }
 
     /**

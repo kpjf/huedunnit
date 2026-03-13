@@ -7,9 +7,24 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="top-menu">
+        <div class="menu-content">
+            <div class="menu-left">
+                <button id="newGameBtn" class="btn btn-menu">New Game</button>
+            </div>
+            <div class="menu-center">
+                <h2>Mastermind</h2>
+            </div>
+            <div class="menu-right">
+                <button id="darkModeBtn" class="btn btn-menu" title="Toggle dark mode">
+                    <span class="dark-mode-icon">🌙</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <header>
-            <h1>Mastermind</h1>
             <p class="subtitle">Guess the secret code in 10 tries</p>
             
             <!-- Seed Input Section -->
@@ -53,12 +68,7 @@
             </div>
 
             <!-- Game Controls -->
-            <div class="controls">
-                <button id="newGameBtn" class="btn btn-success">New Game</button>
-            </div>
-        </main>
-
-        <footer>
+            <footer>
             <p>Black peg = correct color, correct position | White peg = correct color, wrong position</p>
         </footer>
     </div>
