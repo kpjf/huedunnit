@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch, nextTick } from 'vue';
+import { computed } from 'vue';
 import GuessRow from './GuessRow.vue';
 
 const props = defineProps({
@@ -29,22 +29,10 @@ const rows = computed(() => {
     }
     return result;
 });
-
-const boardEl = ref(null);
-
-watch(
-    () => props.guesses.length,
-    async () => {
-        await nextTick();
-        if (boardEl.value) {
-            boardEl.value.scrollTop = boardEl.value.scrollHeight;
-        }
-    },
-);
 </script>
 
 <template>
-    <div ref="boardEl" class="game-board">
+    <div class="game-board">
         <div class="guesses-container">
             <GuessRow
                 v-for="(row, i) in rows"
@@ -64,18 +52,20 @@ watch(
 .game-board {
     flex: 1;
     min-height: 0;
-    overflow-y: auto;
+    overflow: hidden;
     padding: 16px 8px;
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
+    align-items: stretch;
 }
 
 .guesses-container {
+    flex: 1;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
+    gap: 4px;
 }
 </style>

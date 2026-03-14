@@ -26,7 +26,6 @@ const emit = defineEmits(['add-color', 'clear', 'submit']);
 <style scoped>
 .input-section {
     padding: 18px;
-    background: var(--bg-tertiary);
     border: 1px solid var(--border-color);
     display: flex;
     align-items: center;

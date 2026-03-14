@@ -30,7 +30,7 @@ const keyPegs = computed(() => {
 </script>
 
 <template>
-    <div class="guess-row" :class="{ active: isActive }">
+    <div class="guess-row" :class="{ active: isActive, completed: feedback !== null }">
         <div class="guess-pegs">
             <div
                 v-for="(color, i) in displayPegs"
@@ -49,55 +49,45 @@ const keyPegs = computed(() => {
 
 <style scoped>
 .guess-row {
+    flex: 1;
+    min-height: 0;
+    max-height: 60px;
     display: flex;
-    gap: 12px;
     align-items: center;
+    justify-content: center;
+    gap: 8px;
+    opacity: 0.45;
     transform: scale(0.8);
     transform-origin: center center;
-    transition: transform 0.15s ease;
-    margin-block: -5px;
-    justify-content: center;
+    transition: transform 0.15s ease, opacity 0.15s ease;
 }
 
 .guess-row.active {
-    border-color: var(--text-primary);
+    opacity: 1;
     transform: scale(1);
-    margin-block: 8px;
+}
+
+.guess-row.completed {
+    opacity: 0.85;
+    transform: scale(0.9);
 }
 
 .guess-row .guess-pegs {
+    align-self: stretch;
     display: flex;
-    gap: 8px;
+    align-items: center;
+    gap: 6px;
     flex: 0 0 auto;
 }
 
 .guess-row .key-pegs {
-    margin-left: 20px;
+    height: min(100%, 50px);
+    aspect-ratio: 1;
     display: grid;
-    grid-template-columns: repeat(2, 23px);
-    grid-template-rows: repeat(2, 23px);
-    gap: 4px;
-    width: 45px;
-}
-
-@media (max-width: 480px) {
-    .guess-row {
-        gap: 8px;
-    }
-
-    .guess-row .guess-pegs {
-        gap: 6px;
-    }
-
-    .guess-row .key-pegs {
-        gap: 4px;
-    }
-}
-
-@media (max-width: 380px) {
-    .guess-row {
-        padding: 8px;
-        gap: 6px;
-    }
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 3px;
+    margin-left: 8px;
+    flex-shrink: 0;
 }
 </style>

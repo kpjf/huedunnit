@@ -25,14 +25,14 @@ defineEmits(['select']);
 }
 
 .color-btn {
-    flex: 1 1 auto;
-    aspect-ratio: 1/1;
-    width: 50px;
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 50px;
+    aspect-ratio: 1;
     border: 2px solid transparent;
     cursor: pointer;
     transition: all 0.15s;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
-    margin: 0 auto;
 }
 
 .color-btn:hover {
@@ -47,17 +47,4 @@ defineEmits(['select']);
         0 0 0 4px var(--text-primary);
 }
 
-@media (max-width: 480px) {
-    .color-btn {
-        width: 45px;
-        height: 45px;
-    }
-}
-
-@media (max-width: 380px) {
-    .color-btn {
-        width: 40px;
-        height: 40px;
-    }
-}
 </style>

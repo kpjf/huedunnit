@@ -41,15 +41,6 @@ const emit = defineEmits(['play-daily', 'play-random']);
                 </button>
             </div>
 
-            <div class="mode-description">
-                <template v-if="mode === 'classic'">
-                    4 colours &middot; 8 choices &middot; 10 guesses
-                </template>
-                <template v-else>
-                    3 colours &middot; 6 choices &middot; 6 guesses
-                </template>
-            </div>
-
             <div class="intro-puzzle-date">
                 <span class="date-label">Today's Puzzle</span>
                 <span class="date-value">{{ today }}</span>
@@ -83,8 +74,6 @@ const emit = defineEmits(['play-daily', 'play-random']);
 
 .intro-card {
     background: var(--bg-primary);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-    padding: 40px 32px;
     max-width: 400px;
     width: 100%;
     text-align: center;

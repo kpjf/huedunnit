@@ -42,6 +42,8 @@ body {
 
 #app {
     height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .container {
@@ -145,11 +147,11 @@ html.dark-mode .btn-secondary:hover {
 
 /* Pegs */
 .peg {
-    border: 2px solid transparent;
+    height: min(100%, 50px);
+    aspect-ratio: 1;
+    width: auto;
+    flex-shrink: 0;
     background-color: #fff;
-    width: 50px;
-    height: 50px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
     border: none;
     cursor: pointer;
     transition:
@@ -177,9 +179,7 @@ html.dark-mode .peg.empty {
 }
 
 .key-peg {
-    width: 23px;
-    height: 23px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    /* fills its grid cell — sized by .key-pegs grid */
     border: none;
     background: transparent;
 }
@@ -251,28 +251,8 @@ html.dark-mode .key-peg.empty {
         padding: 0;
     }
 
-    .container {
-        /* padding: 16px; */
-    }
-
-    .peg {
-        width: 48px;
-        height: 48px;
-    }
-
     .btn {
         padding: 9px 16px;
         font-size: 0.9em;
-    }
-}
-
-@media (max-width: 380px) {
-    .container {
-        /* padding: 12px; */
-    }
-
-    .peg {
-        width: 46px;
-        height: 46px;
     }
 }

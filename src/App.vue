@@ -145,13 +145,6 @@ onUnmounted(() => {
                     @submit="submitGuess"
                 />
             </main>
-
-            <footer>
-                <p>
-                    Black peg = correct color, correct position | White peg = correct color, wrong
-                    position
-                </p>
-            </footer>
         </div>
 
         <SeedModal
@@ -166,10 +159,6 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-.container {
-    height: 100%;
-}
-
 main {
     flex: 1;
     display: flex;
