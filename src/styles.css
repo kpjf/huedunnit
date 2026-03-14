@@ -1,0 +1,277 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5f5;
+    --bg-tertiary: #fafafa;
+    --text-primary: #333333;
+    --text-secondary: #999999;
+    --border-color: #f0f0f0;
+    --menu-bg: #ffffff;
+    --menu-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+html.dark-mode {
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2a2a2a;
+    --bg-tertiary: #333333;
+    --text-primary: #f5f5f5;
+    --text-secondary: #a0a0a0;
+    --border-color: #3a3a3a;
+    --menu-bg: #242424;
+    --menu-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg-primary);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    color: var(--text-primary);
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
+}
+
+#app {
+    height: 100%;
+}
+
+.container {
+    background: var(--bg-primary);
+    /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08); */
+    max-width: 520px;
+    width: 100%;
+    /* padding: 24px; */
+    margin: 0 auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Buttons */
+.btn {
+    padding: 11px 20px;
+    border: none;
+    font-size: 0.95em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.btn-primary {
+    background: #333;
+    color: white;
+    flex: 2;
+}
+
+.btn-primary:hover {
+    background: #222;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+html.dark-mode .btn-primary {
+    background: #f5f5f5;
+    color: #1a1a1a;
+}
+
+html.dark-mode .btn-primary:hover {
+    background: #e0e0e0;
+}
+
+.btn-primary:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background: #ddd;
+    color: #333;
+    flex: 1;
+}
+
+.btn-secondary:hover {
+    background: #ccc;
+}
+
+html.dark-mode .btn-secondary {
+    background: #444;
+    color: #f5f5f5;
+}
+
+html.dark-mode .btn-secondary:hover {
+    background: #555;
+}
+
+.btn-success {
+    background: #4caf50;
+    color: white;
+    width: 100%;
+}
+
+.btn-success:hover {
+    background: #45a049;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+/* Pegs */
+.peg {
+    border: 2px solid transparent;
+    background-color: #fff;
+    width: 50px;
+    height: 50px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    border: none;
+    cursor: pointer;
+    transition:
+        transform 0.15s,
+        box-shadow 0.15s;
+}
+
+.peg:hover:not(.empty) {
+    transform: scale(1.08);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.peg.empty {
+    background: transparent;
+    border: 2px solid #ccc;
+    cursor: default;
+}
+
+html.dark-mode .peg.empty {
+    border: 2px solid #4a4a4a;
+}
+
+.peg.empty:hover {
+    transform: none;
+}
+
+.key-peg {
+    width: 23px;
+    height: 23px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    border: none;
+    background: transparent;
+}
+
+.key-peg.black {
+    background: #2d2d2d;
+}
+
+html.dark-mode .key-peg.black {
+    background: #f0f0f0;
+}
+
+.key-peg.white {
+    background: #ffffff;
+    border: 1px solid #999;
+}
+
+html.dark-mode .key-peg.white {
+    background: #3a3a3a;
+    border: 1px solid #666;
+}
+
+.key-peg.empty {
+    background: transparent;
+    border: 1px solid #ccc;
+}
+
+html.dark-mode .key-peg.empty {
+    border: 1px solid #4a4a4a;
+    background-color: transparent;
+}
+
+/* Color Pegs - 8 Contrasting Colors */
+.peg.red {
+    background: #d94444;
+}
+
+.peg.blue {
+    background: #3366cc;
+}
+
+.peg.yellow {
+    background: #ccaa00;
+}
+
+.peg.green {
+    background: #33a85a;
+}
+
+.peg.purple {
+    background: #8844cc;
+}
+
+.peg.orange {
+    background: #e07820;
+}
+
+.peg.cyan {
+    background: #1199aa;
+}
+
+.peg.pink {
+    background: #cc3399;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    body {
+        padding: 0;
+    }
+
+    .container {
+        /* padding: 16px; */
+    }
+
+    .peg {
+        width: 48px;
+        height: 48px;
+    }
+
+    .btn {
+        padding: 9px 16px;
+        font-size: 0.9em;
+    }
+}
+
+@media (max-width: 380px) {
+    .container {
+        /* padding: 12px; */
+    }
+
+    .peg {
+        width: 46px;
+        height: 46px;
+    }
+}

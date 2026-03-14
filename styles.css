@@ -33,12 +33,14 @@ body {
     display: flex;
     flex-direction: column;
     color: var(--text-primary);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
 }
 
 /* Top Menu */
 .top-menu {
-    background: var(--menu-bg);
+    /* background: var(--menu-bg); */
     box-shadow: var(--menu-shadow);
     padding: 14px 20px;
     border-bottom: 1px solid var(--border-color);
@@ -345,7 +347,9 @@ html.dark-mode .game-status.lost {
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
     border: none;
     cursor: pointer;
-    transition: transform 0.15s, box-shadow 0.15s;
+    transition:
+        transform 0.15s,
+        box-shadow 0.15s;
 }
 
 .peg:hover:not(.empty) {
@@ -402,35 +406,35 @@ html.dark-mode .key-peg.empty {
 
 /* Color Pegs - 8 Contrasting Colors */
 .peg.red {
-    background: #FF0000;
+    background: #ff0000;
 }
 
 .peg.blue {
-    background: #0000FF;
+    background: #0000ff;
 }
 
 .peg.yellow {
-    background: #FFFF00;
+    background: #ffff00;
 }
 
 .peg.green {
-    background: #00CC00;
+    background: #00cc00;
 }
 
 .peg.purple {
-    background: #9933FF;
+    background: #9933ff;
 }
 
 .peg.orange {
-    background: #FF8800;
+    background: #ff8800;
 }
 
 .peg.cyan {
-    background: #00FFFF;
+    background: #00ffff;
 }
 
 .peg.pink {
-    background: #FF00FF;
+    background: #ff00ff;
 }
 
 /* Input Section */
@@ -483,7 +487,9 @@ html.dark-mode .key-peg.empty {
 
 .color-btn.selected {
     border-color: var(--text-primary);
-    box-shadow: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--text-primary);
+    box-shadow:
+        0 0 0 2px var(--bg-primary),
+        0 0 0 4px var(--text-primary);
 }
 
 /* Current Guess */

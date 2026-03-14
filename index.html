@@ -4,76 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mastermind Game</title>
-    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="top-menu">
-        <div class="menu-content">
-            <div class="menu-left">
-                <button id="newGameBtn" class="btn btn-menu">New Game</button>
-            </div>
-            <div class="menu-center">
-                <h2>Mastermind</h2>
-            </div>
-            <div class="menu-right">
-                <button id="darkModeBtn" class="btn btn-menu" title="Toggle dark mode">
-                    <span class="dark-mode-icon">🌙</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div class="container">
-        <header>
-            <p class="subtitle">Guess the secret code in 10 tries</p>
-            
-            <!-- Seed Input Section -->
-            <div class="seed-section">
-                <div class="seed-display" id="seedDisplay"></div>
-                <div class="seed-input-group">
-                    <button id="setSeedBtn" class="btn btn-seed">Enter Seed Phrase</button>
-                    <button id="randomBtn" class="btn btn-random">Random Game</button>
-                </div>
-                <p class="seed-hint">Click "Enter Seed Phrase" to create a reproducible game, or "Random Game" for a new challenge</p>
-            </div>
-        </header>
-
-        <main>
-            <!-- Secret Code Display (Hidden until game ends) -->
-            <div class="secret-code-container hidden" id="secretCodeContainer">
-                <h2>Secret Code:</h2>
-                <div class="secret-code" id="secretCode"></div>
-            </div>
-
-            <!-- Game Status -->
-            <div class="game-status" id="gameStatus"></div>
-
-            <!-- Game Board -->
-            <div class="game-board">
-                <div class="guesses-container" id="guessesContainer"></div>
-            </div>
-
-            <!-- Current Guess Input -->
-            <div class="input-section" id="inputSection">
-                <div class="color-selector">
-                    <p>Select colors for your guess:</p>
-                    <div class="color-buttons" id="colorButtons"></div>
-                </div>
-
-                <div class="current-guess">
-                    <p>Current Guess:</p>
-                    <div class="guess-pegs" id="currentGuess"></div>
-                    <button id="submitBtn" class="btn btn-primary">Submit Guess</button>
-                    <button id="clearBtn" class="btn btn-secondary">Clear</button>
-                </div>
-            </div>
-
-            <!-- Game Controls -->
-            <footer>
-            <p>Black peg = correct color, correct position | White peg = correct color, wrong position</p>
-        </footer>
-    </div>
-
-    <script src="game.js"></script>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
 </body>
 </html>
