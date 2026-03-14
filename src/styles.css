@@ -147,9 +147,8 @@ html.dark-mode .btn-secondary:hover {
 
 /* Pegs */
 .peg {
-    height: min(100%, 50px);
-    aspect-ratio: 1;
-    width: auto;
+    width: var(--peg-size, 50px);
+    height: var(--peg-size, 50px);
     flex-shrink: 0;
     background-color: #fff;
     border: none;

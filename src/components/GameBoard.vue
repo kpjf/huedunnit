@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, ref, onMounted, onUnmounted, watch, nextTick } from 'vue';
 import GuessRow from './GuessRow.vue';
 
 const props = defineProps({
@@ -29,11 +29,44 @@ const rows = computed(() => {
     }
     return result;
 });
+
+const containerEl = ref(null);
+const rowHeight = ref(60);
+const pegSize = ref(50);
+
+function computeSizes() {
+    if (!containerEl.value) return;
+    const N = props.maxGuesses;
+    const gap = 4;
+    const available = containerEl.value.getBoundingClientRect().height;
+    const rawRow = Math.floor((available - (N - 1) * gap) / N);
+    rowHeight.value = Math.min(rawRow, 60);
+    pegSize.value = Math.min(rowHeight.value, 50);
+}
+
+let resizeObserver = null;
+
+onMounted(async () => {
+    await nextTick();
+    computeSizes();
+    resizeObserver = new ResizeObserver(computeSizes);
+    if (containerEl.value) resizeObserver.observe(containerEl.value);
+});
+
+onUnmounted(() => {
+    resizeObserver?.disconnect();
+});
+
+watch(() => props.maxGuesses, computeSizes);
 </script>
 
 <template>
     <div class="game-board">
-        <div class="guesses-container">
+        <div
+            ref="containerEl"
+            class="guesses-container"
+            :style="{ '--row-height': rowHeight + 'px', '--peg-size': pegSize + 'px' }"
+        >
             <GuessRow
                 v-for="(row, i) in rows"
                 :key="i"

@@ -49,9 +49,8 @@ const keyPegs = computed(() => {
 
 <style scoped>
 .guess-row {
-    flex: 1;
-    min-height: 0;
-    max-height: 60px;
+    height: var(--row-height, 60px);
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -73,7 +72,6 @@ const keyPegs = computed(() => {
 }
 
 .guess-row .guess-pegs {
-    align-self: stretch;
     display: flex;
     align-items: center;
     gap: 6px;
@@ -81,8 +79,8 @@ const keyPegs = computed(() => {
 }
 
 .guess-row .key-pegs {
-    height: min(100%, 50px);
-    aspect-ratio: 1;
+    width: var(--peg-size, 50px);
+    height: var(--peg-size, 50px);
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
