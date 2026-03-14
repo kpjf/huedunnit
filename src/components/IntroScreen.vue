@@ -41,11 +41,6 @@ const emit = defineEmits(['play-daily', 'play-random']);
                 </button>
             </div>
 
-            <div class="intro-puzzle-date">
-                <span class="date-label">Today's Puzzle</span>
-                <span class="date-value">{{ today }}</span>
-            </div>
-
             <div class="intro-actions">
                 <button class="btn btn-primary intro-btn" @click="emit('play-daily', mode)">
                     Play Today's Puzzle
@@ -55,9 +50,14 @@ const emit = defineEmits(['play-daily', 'play-random']);
                 </button>
             </div>
 
-            <div class="intro-account">
+            <!-- <div class="intro-account">
                 <button class="btn btn-ghost" disabled>Login</button>
                 <button class="btn btn-ghost" disabled>Subscribe</button>
+            </div> -->
+
+            <div class="intro-puzzle-date">
+                <span class="date-label">Today's Puzzle</span>
+                <span class="date-value">{{ today }}</span>
             </div>
         </div>
     </div>
@@ -139,8 +139,7 @@ const emit = defineEmits(['play-daily', 'play-random']);
 }
 
 .intro-puzzle-date {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
+    background: transparent;
     padding: 12px 16px;
     margin-bottom: 24px;
     display: flex;

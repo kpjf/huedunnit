@@ -9,9 +9,10 @@ const props = defineProps({
     seed: { type: String, default: null },
     maxGuesses: { type: Number, required: true },
     codeLength: { type: Number, required: true },
+    stats: { type: Object, default: null },
 });
 
-const emit = defineEmits(['play-again']);
+const emit = defineEmits(['play-again', 'show-stats']);
 
 const isDaily = computed(() => props.seed !== null);
 
@@ -91,7 +92,12 @@ async function handleShare() {
                 <button class="btn btn-primary outro-btn" @click="handleShare">
                     {{ copied ? 'Copied!' : 'Share Results' }}
                 </button>
-                <button class="btn btn-secondary outro-btn" disabled title="Coming soon">
+                <button
+                    class="btn btn-secondary outro-btn"
+                    :disabled="!stats"
+                    :title="stats ? undefined : 'Play a daily puzzle to track stats'"
+                    @click="$emit('show-stats')"
+                >
                     Stats
                 </button>
             </div>

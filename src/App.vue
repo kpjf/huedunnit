@@ -7,8 +7,10 @@ import GuessInput from './components/GuessInput.vue';
 import IntroScreen from './components/IntroScreen.vue';
 import ConfettiCanvas from './components/ConfettiCanvas.vue';
 import OutroScreen from './components/OutroScreen.vue';
+import StatsScreen from './components/StatsScreen.vue';
 import { useGame } from './game/useGame.js';
 import { saveDailyState, loadDailyState } from './game/useDailyStorage.js';
+import { recordResult, loadStats } from './game/useStats.js';
 
 const {
     currentSeed,
@@ -33,18 +35,25 @@ const darkMode = ref(localStorage.getItem('mastermind-darkMode') === 'true');
 const showSeedModal = ref(false);
 const showConfetti = ref(false);
 const currentMode = ref('classic');
+const currentStats = ref(null);
 
 watch(won, (val) => {
-    if (val) showConfetti.value = true;
+    if (val && screen.value === 'game') showConfetti.value = true;
 });
 
 watch(gameOver, (val) => {
-    if (val && !won.value) screen.value = 'outro';
+    if (val) {
+        if (currentSeed.value === dailySeed()) {
+            recordResult(currentSeed.value, currentMode.value, won.value, guesses.value.length);
+            currentStats.value = loadStats(currentMode.value);
+        }
+        if (!won.value) screen.value = 'outro';
+    }
 });
 
 function handleConfettiDone() {
     showConfetti.value = false;
-    screen.value = 'outro';
+    if (screen.value === 'game') screen.value = 'outro';
 }
 
 function dailySeed() {
@@ -57,7 +66,12 @@ function handlePlayDaily(mode) {
     const saved = loadDailyState(date, mode);
     if (saved) {
         restoreGame(date, mode, saved);
-        screen.value = saved.gameOver ? 'outro' : 'game';
+        if (saved.gameOver) {
+            currentStats.value = loadStats(mode);
+            screen.value = 'outro';
+        } else {
+            screen.value = 'game';
+        }
     } else {
         startSeededGame(date, mode);
         screen.value = 'game';
@@ -140,7 +154,18 @@ onUnmounted(() => {
         :seed="currentSeed"
         :max-guesses="gameConfig.MAX_GUESSES"
         :code-length="gameConfig.CODE_LENGTH"
+        :stats="currentStats"
         @play-again="handleNewGame"
+        @show-stats="screen = 'stats'"
+    />
+
+    <StatsScreen
+        v-else-if="screen === 'stats'"
+        :stats="currentStats"
+        :max-guesses="gameConfig.MAX_GUESSES"
+        :won="won"
+        :guess-count="guesses.length"
+        @close="screen = 'outro'"
     />
 
     <template v-else>
