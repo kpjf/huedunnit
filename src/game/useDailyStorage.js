@@ -24,7 +24,10 @@ function loadAll() {
 function gc(all) {
     const cutoff = new Date();
     cutoff.setDate(cutoff.getDate() - GC_DAYS);
-    const cutoffStr = cutoff.toISOString().slice(0, 10);
+    const y = cutoff.getFullYear();
+    const m = String(cutoff.getMonth() + 1).padStart(2, '0');
+    const d = String(cutoff.getDate()).padStart(2, '0');
+    const cutoffStr = `${y}-${m}-${d}`;
     for (const key of Object.keys(all)) {
         if (all[key].date < cutoffStr) {
             delete all[key];
