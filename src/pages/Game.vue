@@ -12,6 +12,7 @@ import StatsScreen from '../components/StatsScreen.vue';
 import { useGame } from '../game/useGame.js';
 import { saveDailyState, loadDailyState } from '../game/useDailyStorage.js';
 import { recordResult, loadStats } from '../game/useStats.js';
+import { useAuthStore } from '../stores/auth.js';
 
 const {
     currentSeed,
@@ -32,6 +33,7 @@ const {
 } = useGame();
 
 const router = useRouter();
+const authStore = useAuthStore();
 const screen = ref('intro');
 const darkMode = ref(localStorage.getItem('mastermind-darkMode') !== 'false');
 const showSeedModal = ref(false);
@@ -142,14 +144,20 @@ onMounted(() => {
 onUnmounted(() => {
     document.removeEventListener('keydown', handleKeydown);
 });
+
+const onLogin = () => router.push('/login');
+const onLogout = () => authStore.logout();
 </script>
 
 <template>
     <IntroScreen
         v-if="screen === 'intro'"
+        :is-authenticated="authStore.isAuthenticated"
         @play-daily="handlePlayDaily"
         @play-random="handlePlayRandom"
-        @login="router.push('/login')"
+        @login="onLogin"
+        @signup="router.push('/signup')"
+        @logout="onLogout"
     />
 
     <OutroScreen

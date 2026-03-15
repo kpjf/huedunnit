@@ -2,19 +2,25 @@
 import { ref, computed } from 'vue';
 import { useAuth } from '../composables/useAuth.js';
 
-const { login, isLoading, error } = useAuth();
+const { register, isLoading, error } = useAuth();
 
+const name = ref('');
 const email = ref('');
 const password = ref('');
 const showPassword = ref(false);
 const localError = ref('');
 
+const nameValid = computed(() => name.value.trim().length >= 2);
 const emailValid = computed(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value));
 const passwordValid = computed(() => password.value.length >= 6);
-const canSubmit = computed(() => emailValid.value && passwordValid.value && !isLoading.value);
+const canSubmit = computed(() => nameValid.value && emailValid.value && passwordValid.value && !isLoading.value);
 
 async function handleSubmit() {
     localError.value = '';
+    if (!nameValid.value) {
+        localError.value = 'Name must be at least 2 characters.';
+        return;
+    }
     if (!emailValid.value) {
         localError.value = 'Please enter a valid email address.';
         return;
@@ -24,9 +30,9 @@ async function handleSubmit() {
         return;
     }
     try {
-        await login(email.value, password.value);
+        await register({ name: name.value.trim(), email: email.value, password: password.value });
     } catch {
-        // error is exposed via the store; localError only for validation
+        // error is exposed via the store
     }
 }
 
@@ -40,9 +46,21 @@ const appName = import.meta.env.VITE_APP_NAME || 'App';
                 <img src="/images/logo.svg" class="logo" alt="HEXCode" />
             </RouterLink>
             <h1>{{ appName }}</h1>
-            <h2>Sign in</h2>
+            <h2>Create an account</h2>
 
             <form @submit.prevent="handleSubmit" novalidate>
+                <div class="field">
+                    <label for="name">Name</label>
+                    <input
+                        id="name"
+                        v-model="name"
+                        type="text"
+                        autocomplete="name"
+                        placeholder="Your name"
+                        :disabled="isLoading"
+                    />
+                </div>
+
                 <div class="field">
                     <label for="email">Email</label>
                     <input
@@ -62,7 +80,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'App';
                             id="password"
                             v-model="password"
                             :type="showPassword ? 'text' : 'password'"
-                            autocomplete="current-password"
+                            autocomplete="new-password"
                             placeholder="••••••••"
                             :disabled="isLoading"
                         />
@@ -80,13 +98,13 @@ const appName = import.meta.env.VITE_APP_NAME || 'App';
                 <p v-if="localError || error" class="error-msg">{{ localError || error }}</p>
 
                 <button type="submit" class="submit-btn" :disabled="!canSubmit">
-                    <span v-if="isLoading">Signing in…</span>
-                    <span v-else>Sign in</span>
+                    <span v-if="isLoading">Creating account…</span>
+                    <span v-else>Sign Up</span>
                 </button>
 
                 <p class="switch-link">
-                    Don't have an account?
-                    <RouterLink to="/signup">Sign up</RouterLink>
+                    Already have an account?
+                    <RouterLink to="/login">Sign in</RouterLink>
                 </p>
             </form>
         </div>

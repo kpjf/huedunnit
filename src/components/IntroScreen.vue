@@ -8,8 +8,12 @@ const today = new Date().toLocaleDateString('en-US', {
     day: 'numeric',
 });
 
+const props = defineProps({
+    isAuthenticated: { type: Boolean, default: false },
+});
+
 const mode = ref('classic');
-const emit = defineEmits(['play-daily', 'play-random', 'login']);
+const emit = defineEmits(['play-daily', 'play-random', 'login', 'signup', 'logout']);
 </script>
 
 <template>
@@ -51,7 +55,13 @@ const emit = defineEmits(['play-daily', 'play-random', 'login']);
             </div>
 
             <div class="intro-account">
-                <button class="btn btn-ghost" @click="emit('login')">Login</button>
+                <template v-if="props.isAuthenticated">
+                    <button class="btn btn-ghost" @click="emit('logout')">Logout</button>
+                </template>
+                <template v-else>
+                    <button class="btn btn-ghost" @click="emit('login')">Login</button>
+                    <button class="btn btn-ghost" @click="emit('signup')">Sign Up</button>
+                </template>
             </div>
 
             <div class="intro-puzzle-date">
