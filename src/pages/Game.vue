@@ -147,6 +147,7 @@ onUnmounted(() => {
 
 const onLogin = () => router.push('/login');
 const onLogout = () => authStore.logout();
+const onStats = () => router.push('/stats');
 </script>
 
 <template>
@@ -158,6 +159,7 @@ const onLogout = () => authStore.logout();
         @login="onLogin"
         @signup="router.push('/signup')"
         @logout="onLogout"
+        @stats="onStats"
     />
 
     <OutroScreen

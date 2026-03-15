@@ -1,11 +1,15 @@
 import { useAuthStore } from '../stores/auth.js'
 
-const BASE_URL = import.meta.env.VITE_AUTH_SERVICE_URL
 const TIMEOUT_MS = 10_000
 
 class AuthClient {
+  #baseUrl
   #isRefreshing = false
   #refreshQueue = []
+
+  constructor(baseUrl) {
+    this.#baseUrl = baseUrl
+  }
 
   async #request(path, options = {}) {
     const authStore = useAuthStore()
@@ -14,7 +18,7 @@ class AuthClient {
     const timer = setTimeout(() => controller.abort(), TIMEOUT_MS)
 
     const makeRequest = async (token) => {
-      const res = await fetch(`${BASE_URL}${path}`, {
+      const res = await fetch(`${this.#baseUrl}${path}`, {
         ...options,
         signal: controller.signal,
         headers: {
@@ -93,7 +97,8 @@ class AuthClient {
   }
 }
 
-const client = new AuthClient()
+const client = new AuthClient(import.meta.env.VITE_AUTH_SERVICE_URL)
+const dataClient = new AuthClient(import.meta.env.VITE_DATA_API_URL)
 
 export const authApi = {
   login: (email, password) => client.post('/auth/login', { email, password }),
@@ -115,4 +120,9 @@ export const sessionApi = {
   getMySessions: () => client.get('/sessions/me'),
   invalidateSession: (id) => client.delete(`/sessions/me/${id}`),
   invalidateAllSessions: () => client.delete('/sessions/me'),
+}
+
+export const statsApi = {
+  get: () => dataClient.get('/v1/stats'),
+  post: (data) => dataClient.post('/v1/stats', data),
 }

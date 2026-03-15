@@ -7,7 +7,8 @@
       "Bash(find c:Userskeithdevemmet-funhexcode -maxdepth 2 -type f \\\\\\(-name *.json -o -name *manifest* -o -name *service*worker* \\\\\\))",
       "Bash(find c:/Users/keith/dev/emmet-fun/hexcode/node_modules -maxdepth 2 -name resvg* -o -name @resvg)",
       "Bash(export PATH=\"/c/Users/keith/AppData/Roaming/fnm/node-versions/v22.14.0/installation:$PATH\")",
-      "Bash(npm --version)"
+      "Bash(npm --version)",
+      "Bash(xargs wc:*)"
     ]
   }
 }

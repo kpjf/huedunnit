@@ -16,6 +16,11 @@ const routes = [
         component: () => import('./pages/Signup.vue'),
         meta: { requiresGuest: true },
     },
+    {
+        path: '/stats',
+        component: () => import('./pages/Stats.vue'),
+        meta: { requiresAuth: true },
+    },
 ];
 
 const router = createRouter({

@@ -13,7 +13,7 @@ const props = defineProps({
 });
 
 const mode = ref('classic');
-const emit = defineEmits(['play-daily', 'play-random', 'login', 'signup', 'logout']);
+const emit = defineEmits(['play-daily', 'play-random', 'login', 'signup', 'logout', 'stats']);
 </script>
 
 <template>
@@ -56,6 +56,7 @@ const emit = defineEmits(['play-daily', 'play-random', 'login', 'signup', 'logou
 
             <div class="intro-account">
                 <template v-if="props.isAuthenticated">
+                    <button class="btn btn-ghost" @click="emit('stats')">Stats</button>
                     <button class="btn btn-ghost" @click="emit('logout')">Logout</button>
                 </template>
                 <template v-else>
