@@ -1,9 +1,17 @@
 <script setup>
+import { useHaptics } from '../composables/useHaptics.js';
+
 defineProps({
     colors: { type: Array, required: true },
 });
 
-defineEmits(['select']);
+const emit = defineEmits(['select']);
+const { tapColor } = useHaptics();
+
+function handleSelect(color) {
+    tapColor();
+    emit('select', color);
+}
 </script>
 
 <template>
@@ -13,7 +21,7 @@ defineEmits(['select']);
             :key="color"
             class="color-btn peg"
             :class="color"
-            @click="$emit('select', color)"
+            @click="handleSelect(color)"
         />
     </div>
 </template>

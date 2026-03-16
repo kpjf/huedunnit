@@ -1,5 +1,6 @@
 <script setup>
 import ColorPicker from './ColorPicker.vue';
+import { useHaptics } from '../composables/useHaptics.js';
 
 defineProps({
     canSubmit: { type: Boolean, required: true },
@@ -7,6 +8,17 @@ defineProps({
 });
 
 const emit = defineEmits(['add-color', 'clear', 'submit']);
+const { tapSubmit, tapClear } = useHaptics();
+
+function handleSubmit() {
+    tapSubmit();
+    emit('submit');
+}
+
+function handleClear() {
+    tapClear();
+    emit('clear');
+}
 </script>
 
 <template>
@@ -15,10 +27,10 @@ const emit = defineEmits(['add-color', 'clear', 'submit']);
             <ColorPicker :colors="colors" @select="emit('add-color', $event)" />
         </div>
         <div class="actions">
-            <button class="btn btn-primary" :disabled="!canSubmit" @click="emit('submit')">
+            <button class="btn btn-primary" :disabled="!canSubmit" @click="handleSubmit">
                 Submit Guess
             </button>
-            <button class="btn btn-secondary" @click="emit('clear')">Clear</button>
+            <button class="btn btn-secondary" @click="handleClear">Clear</button>
         </div>
     </div>
 </template>

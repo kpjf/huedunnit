@@ -10,10 +10,13 @@ import ConfettiCanvas from '../components/ConfettiCanvas.vue';
 import OutroScreen from '../components/OutroScreen.vue';
 import StatsScreen from '../components/StatsScreen.vue';
 import { useGame } from '../game/useGame.js';
+import { useHaptics } from '../composables/useHaptics.js';
 import { saveDailyState, loadDailyState } from '../game/useDailyStorage.js';
 import { recordResult, loadStats, checkAndExpireStreak } from '../game/useStats.js';
 import { useAuthStore } from '../stores/auth.js';
 import { useStatsStore } from '../stores/stats.js';
+
+const { celebrate } = useHaptics();
 
 const {
     currentSeed,
@@ -44,7 +47,10 @@ const currentMode = ref('classic');
 const currentStats = ref(null);
 
 watch(won, (val) => {
-    if (val && screen.value === 'game') showConfetti.value = true;
+    if (val && screen.value === 'game') {
+        showConfetti.value = true;
+        celebrate();
+    }
 });
 
 watch(gameOver, (val) => {
