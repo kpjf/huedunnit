@@ -15,6 +15,7 @@ import { saveDailyState, loadDailyState } from '../game/useDailyStorage.js';
 import { recordResult, loadStats, checkAndExpireStreak } from '../game/useStats.js';
 import { useAuthStore } from '../stores/auth.js';
 import { useStatsStore } from '../stores/stats.js';
+import { useShareImage } from '../composables/useShareImage.js';
 
 const { celebrate } = useHaptics();
 
@@ -155,35 +156,20 @@ onUnmounted(() => {
     document.removeEventListener('keydown', handleKeydown);
 });
 
-const reviewCopied = ref(false);
-
-function buildShareText() {
-    const today = new Date().toLocaleDateString('en-US', {
-        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-    });
-    const header = currentSeed.value ? `HEXCode - ${today}` : 'HEXCode - Random Game';
-    const score = `${guesses.value.length}/${gameConfig.value.MAX_GUESSES}`;
-    const grid = guesses.value
-        .map(({ feedback }) => {
-            const { blackPegs, whitePegs } = feedback;
-            const misses = gameConfig.value.CODE_LENGTH - blackPegs - whitePegs;
-            return '🟩'.repeat(blackPegs) + '🟨'.repeat(whitePegs) + '⬜'.repeat(misses);
-        })
-        .join('\n');
-    return `${header}\n${score}\n\n${grid}`;
-}
+const reviewShared = ref(false);
+const { shareReview } = useShareImage();
 
 async function handleReviewShare() {
-    const text = buildShareText();
-    if (navigator.share) {
-        try { await navigator.share({ text }); } catch { /* cancelled */ }
-    } else {
-        try {
-            await navigator.clipboard.writeText(text);
-            reviewCopied.value = true;
-            setTimeout(() => { reviewCopied.value = false; }, 2000);
-        } catch { /* unavailable */ }
-    }
+    await shareReview({
+        guesses: guesses.value,
+        codeLength: gameConfig.value.CODE_LENGTH,
+        maxGuesses: gameConfig.value.MAX_GUESSES,
+        isDaily: !!currentSeed.value,
+        onCopied: () => {
+            reviewShared.value = true;
+            setTimeout(() => { reviewShared.value = false; }, 2000);
+        },
+    });
 }
 
 const onLogin = () => router.push('/login');
@@ -259,7 +245,7 @@ const onStats = () => router.push('/stats');
                         ← Back
                     </button>
                     <button class="btn btn-primary review-bar-btn" @click="handleReviewShare">
-                        {{ reviewCopied ? 'Copied!' : 'Share' }}
+                        {{ reviewShared ? 'Saved!' : 'Share' }}
                     </button>
                     <button
                         class="btn btn-secondary review-bar-btn"

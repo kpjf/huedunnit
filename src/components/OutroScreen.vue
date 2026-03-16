@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue';
+import { useShareImage } from '../composables/useShareImage.js';
 
 const props = defineProps({
     won: { type: Boolean, required: true },
@@ -32,40 +33,20 @@ const heading = computed(() => {
     return 'Close call!';
 });
 
-const copied = ref(false);
-
-function buildShareText() {
-    const header = isDaily.value ? `HEXCode - ${today}` : 'HEXCode - Random Game';
-    const score = `${props.guessCount}/${props.maxGuesses}`;
-    const grid = props.guesses
-        .map(({ feedback }) => {
-            const { blackPegs, whitePegs } = feedback;
-            const misses = props.codeLength - blackPegs - whitePegs;
-            return '🟩'.repeat(blackPegs) + '🟨'.repeat(whitePegs) + '⬜'.repeat(misses);
-        })
-        .join('\n');
-    return `${header}\n${score}\n\n${grid}`;
-}
+const shared = ref(false);
+const { shareResults } = useShareImage();
 
 async function handleShare() {
-    const text = buildShareText();
-    if (navigator.share) {
-        try {
-            await navigator.share({ text });
-        } catch {
-            // user cancelled or share failed — silent fail
-        }
-    } else {
-        try {
-            await navigator.clipboard.writeText(text);
-            copied.value = true;
-            setTimeout(() => {
-                copied.value = false;
-            }, 2000);
-        } catch {
-            // clipboard not available — silent fail
-        }
-    }
+    await shareResults({
+        guesses: props.guesses,
+        codeLength: props.codeLength,
+        maxGuesses: props.maxGuesses,
+        isDaily: isDaily.value,
+        onCopied: () => {
+            shared.value = true;
+            setTimeout(() => { shared.value = false; }, 2000);
+        },
+    });
 }
 </script>
 
@@ -99,7 +80,7 @@ async function handleShare() {
 
             <div class="outro-actions">
                 <button class="btn btn-primary outro-btn" @click="handleShare">
-                    {{ copied ? 'Copied!' : 'Share Results' }}
+                    {{ shared ? 'Saved!' : 'Share Results' }}
                 </button>
                 <button
                     class="btn btn-secondary outro-btn"
