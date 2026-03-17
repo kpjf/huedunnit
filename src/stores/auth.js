@@ -63,14 +63,36 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   // Token persistence helpers
+  let refreshTimer = null
+
+  function scheduleTokenRefresh() {
+    if (refreshTimer) clearTimeout(refreshTimer)
+    const expiresAt = tokenExpiresAt.value
+    if (!expiresAt) return
+    const delay = expiresAt - Date.now() - 60_000 // refresh 1 min before expiry
+    if (delay <= 0) return
+    refreshTimer = setTimeout(async () => {
+      try {
+        await refreshTokens()
+      } catch {
+        // refreshTokens failure already handles logout
+      }
+    }, delay)
+  }
+
   function persistTokens(access, refresh) {
     accessToken.value = access
     refreshToken.value = refresh
     localStorage.setItem('accessToken', access)
     localStorage.setItem('refreshToken', refresh)
+    scheduleTokenRefresh()
   }
 
   function clearTokens() {
+    if (refreshTimer) {
+      clearTimeout(refreshTimer)
+      refreshTimer = null
+    }
     accessToken.value = null
     refreshToken.value = null
     localStorage.removeItem('accessToken')
@@ -213,6 +235,8 @@ export const useAuthStore = defineStore('auth', () => {
       try {
         if (isTokenExpired.value) {
           await refreshTokens()
+        } else {
+          scheduleTokenRefresh()
         }
         await fetchCurrentUser()
       } catch {

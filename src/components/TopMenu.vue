@@ -59,6 +59,10 @@ defineEmits(['toggle-dark-mode', 'new-game']);
     align-items: center;
     gap: 6px;
     text-decoration: none;
+    color: #000000aa;
+}
+
+:global(html.dark-mode) .menu-left a {
     color: #ffffffaa;
 }
 

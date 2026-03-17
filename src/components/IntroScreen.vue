@@ -1,6 +1,4 @@
 <script setup>
-import { ref } from 'vue';
-
 const commitHash = __COMMIT_HASH__;
 
 const today = new Date().toLocaleDateString('en-US', {
@@ -14,64 +12,53 @@ const props = defineProps({
     isAuthenticated: { type: Boolean, default: false },
 });
 
-const mode = ref('classic');
 const emit = defineEmits(['play-daily', 'play-random', 'login', 'signup', 'logout', 'stats']);
 </script>
 
 <template>
     <div class="intro-container">
         <div class="intro-card">
-            <div class="intro-logo">
-                <slot name="logo">
-                    <img src="/images/logo.svg" />
-                </slot>
-            </div>
+            <main>
+                <div class="intro-logo">
+                    <slot name="logo">
+                        <img src="/images/logo.svg" />
+                    </slot>
+                </div>
 
-            <h1 class="intro-title">HEXCode</h1>
-            <p class="intro-description">Break the secret code. A new puzzle every day.</p>
+                <h1 class="intro-title">HEXCode</h1>
+                <p class="intro-description">Break the secret code. A new puzzle every day.</p>
 
-            <div class="mode-toggle">
-                <button
-                    class="mode-btn"
-                    :class="{ active: mode === 'classic' }"
-                    @click="mode = 'classic'"
-                >
-                    Classic
-                </button>
-                <button
-                    class="mode-btn"
-                    :class="{ active: mode === 'quick' }"
-                    @click="mode = 'quick'"
-                >
-                    Quick
-                </button>
-            </div>
+                <div class="mode-toggle">
+                    <button class="mode-btn" @click="emit('play-daily', 'quick')">Quick</button>
+                    <button class="mode-btn" @click="emit('play-daily', 'classic')">Classic</button>
+                </div>
 
-            <div class="intro-actions">
-                <button class="btn btn-primary intro-btn" @click="emit('play-daily', mode)">
-                    Play Today's Puzzle
-                </button>
-                <button class="btn btn-secondary intro-btn" @click="emit('play-random', mode)">
-                    Random Game
-                </button>
-            </div>
+                <div class="intro-puzzle-date">
+                    <span class="date-value">{{ today }}</span>
+                </div>
+            </main>
 
-            <div class="intro-account">
-                <template v-if="props.isAuthenticated">
-                    <button class="btn btn-ghost" @click="emit('stats')">Stats</button>
-                    <button class="btn btn-ghost" @click="emit('logout')">Logout</button>
-                </template>
-                <template v-else>
-                    <button class="btn btn-ghost" @click="emit('login')">Login</button>
-                    <button class="btn btn-ghost" @click="emit('signup')">Sign Up</button>
-                </template>
-            </div>
+            <footer>
+                <!-- <div class="intro-actions">
+                    <button class="btn btn-primary intro-btn" @click="emit('play-daily', mode)">
+                        Play Today's Puzzle
+                    </button>
+                    <button class="btn btn-secondary intro-btn" @click="emit('play-random', mode)">
+                        Random Game
+                    </button>
+                </div> -->
 
-            <div class="intro-puzzle-date">
-                <span class="date-label">Today's Puzzle</span>
-                <span class="date-value">{{ today }}</span>
-            </div>
-            <div class="version-hash">{{ commitHash }}</div>
+                <div class="intro-account">
+                    <template v-if="props.isAuthenticated">
+                        <button class="btn btn-ghost" @click="emit('stats')">Stats</button>
+                        <button class="btn btn-ghost" @click="emit('logout')">Logout</button>
+                    </template>
+                    <template v-else>
+                        <button class="btn btn-ghost" @click="emit('login')">Login</button>
+                        <button class="btn btn-ghost" @click="emit('signup')">Sign Up</button>
+                    </template>
+                </div>
+            </footer>
         </div>
     </div>
 </template>
@@ -82,21 +69,45 @@ const emit = defineEmits(['play-daily', 'play-random', 'login', 'signup', 'logou
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    padding: 20px;
+    background-color: #213a8f;
 }
 
 .intro-card {
-    background: var(--bg-primary);
     max-width: 400px;
     width: 100%;
     text-align: center;
     animation: slideIn 0.3s ease-out;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    main {
+        flex: 1 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    footer {
+        flex: 0 o 100%;
+        width: 100%;
+        padding: 1rem;
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        gap: 0.5rem;
+        flex-direction: column;
+    }
 }
 
 .intro-logo {
-    margin-bottom: 24px;
-
-    width: 200px;
+    margin: 0 auto 12px auto !important;
+    width: 90px;
     margin: auto;
 }
 
@@ -111,34 +122,38 @@ const emit = defineEmits(['play-daily', 'play-random', 'login', 'signup', 'logou
 .intro-title {
     font-size: 2em;
     font-weight: 700;
-    color: var(--text-primary);
+    color: #fff;
     margin-bottom: 8px;
 }
 
 .intro-description {
-    color: var(--text-secondary);
-    font-size: 0.95em;
-    margin-bottom: 20px;
+    color: #fff;
+    font-size: 1.2rem;
+    max-width: 25ch;
+    margin: 0 auto 20px auto;
 }
 
 .mode-toggle {
     display: flex;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    padding: 3px;
     margin-bottom: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    flex-direction: column;
 }
 
 .mode-btn {
     flex: 1;
-    padding: 8px 0;
-    font-size: 0.9em;
+    font-size: 1rem;
     font-weight: 600;
-    background: transparent;
+    background: #000;
     border: none;
-    color: var(--text-secondary);
+    border-radius: 100px;
+    width: 200px;
+    color: #fff;
     cursor: pointer;
     transition: all 0.15s;
+    padding: 12px 20px;
 }
 
 .mode-btn.active {
@@ -167,13 +182,13 @@ const emit = defineEmits(['play-daily', 'play-random', 'login', 'signup', 'logou
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--text-secondary);
+    color: #fff;
 }
 
 .date-value {
     font-size: 0.95em;
     font-weight: 600;
-    color: var(--text-primary);
+    color: #fff;
 }
 
 .intro-actions {
@@ -194,18 +209,20 @@ const emit = defineEmits(['play-daily', 'play-random', 'login', 'signup', 'logou
     gap: 10px;
     justify-content: center;
     padding-top: 16px;
-    border-top: 1px solid var(--border-color);
 }
 
 .btn-ghost {
     background: transparent;
-    color: var(--text-secondary);
-    border: 1px solid var(--border-color);
+    color: #fff;
+    border: 1px solid #fff;
     padding: 8px 20px;
-    font-size: 0.88em;
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     flex: 1;
+    border-radius: 40px;
+    width: auto;
+    flex: 0 0 auto;
 }
 
 .btn-ghost:hover {
