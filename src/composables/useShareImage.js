@@ -52,7 +52,7 @@ function buildShareCanvas({ guesses, codeLength, maxGuesses, isDaily, showGuesse
 
     const guessW = codeLength * SQ + (codeLength - 1) * SQ_GAP;
     const keyW = SQ; // 2×2 grid is SQ×SQ
-    const rowContentW = showGuesses ? guessW + SEP + keyW : keyW;
+    const rowContentW = showGuesses ? guessW + SEP + keyW : guessW;
 
     const W = Math.max(240, rowContentW + PADDING_X * 2);
     const rowX = (W - rowContentW) / 2;
@@ -112,19 +112,31 @@ function buildShareCanvas({ guesses, codeLength, maxGuesses, isDaily, showGuesse
             x += guessW + SEP;
         }
 
-        // 2×2 feedback grid
         const dots = [
             ...Array(blackPegs).fill('hit'),
             ...Array(whitePegs).fill('close'),
             ...Array(codeLength - blackPegs - whitePegs).fill('miss'),
         ];
 
-        dots.forEach((type, i) => {
-            const col = i % 2;
-            const row = Math.floor(i / 2);
-            ctx.fillStyle = type === 'hit' ? '#22c55e' : type === 'close' ? '#eab308' : '#3a3a3a';
-            ctx.fillRect(x + col * (MINI + MINI_GAP), y + row * (MINI + MINI_GAP), MINI, MINI);
-        });
+        if (showGuesses) {
+            // 2×2 compressed feedback grid
+            dots.forEach((type, i) => {
+                const col = i % 2;
+                const row = Math.floor(i / 2);
+                ctx.fillStyle = type === 'hit' ? '#22c55e' : type === 'close' ? '#eab308' : '#3a3a3a';
+                ctx.fillRect(x + col * (MINI + MINI_GAP), y + row * (MINI + MINI_GAP), MINI, MINI);
+            });
+        } else {
+            // Horizontal peg row
+            dots.forEach((type, i) => {
+                const cx = x + i * (SQ + SQ_GAP) + SQ / 2;
+                const cy = y + SQ / 2;
+                ctx.beginPath();
+                ctx.arc(cx, cy, SQ / 2, 0, Math.PI * 2);
+                ctx.fillStyle = type === 'hit' ? '#22c55e' : type === 'close' ? '#eab308' : '#3a3a3a';
+                ctx.fill();
+            });
+        }
 
         y += ROW_H + ROW_GAP;
     }
