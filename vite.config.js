@@ -28,8 +28,8 @@ export default defineConfig({
                 name: 'HEXCode',
                 short_name: 'HEXCode',
                 description: 'Guess the secret hex color code',
-                theme_color: '#1a1a1a',
-                background_color: '#1a1a1a',
+                theme_color: '#111111',
+                background_color: '#111111',
                 display: 'standalone',
                 start_url: '/',
                 icons: [

@@ -30,8 +30,20 @@ const emit = defineEmits(['play-daily', 'play-random', 'login', 'signup', 'logou
                 <p class="intro-description">Break the secret code. A new puzzle every day.</p>
 
                 <div class="mode-toggle">
-                    <button class="mode-btn" :class="{ completed: completedModes.quick }" @click="emit('play-daily', 'quick')">Quick</button>
-                    <button class="mode-btn" :class="{ completed: completedModes.classic }" @click="emit('play-daily', 'classic')">Classic</button>
+                    <button
+                        class="mode-btn"
+                        :class="{ completed: completedModes.quick }"
+                        @click="emit('play-daily', 'quick')"
+                    >
+                        Quick
+                    </button>
+                    <button
+                        class="mode-btn"
+                        :class="{ completed: completedModes.classic }"
+                        @click="emit('play-daily', 'classic')"
+                    >
+                        Classic
+                    </button>
                 </div>
 
                 <div class="intro-puzzle-date">
@@ -70,7 +82,7 @@ const emit = defineEmits(['play-daily', 'play-random', 'login', 'signup', 'logou
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background-color: #213a8f;
+    background-color: #111;
 }
 
 .intro-card {

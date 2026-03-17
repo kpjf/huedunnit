@@ -70,7 +70,7 @@ function buildShareCanvas({ guesses, codeLength, maxGuesses, isDaily, showGuesse
     ctx.scale(DPR, DPR);
 
     // Background
-    ctx.fillStyle = '#1a1a1a';
+    ctx.fillStyle = '#111111';
     ctx.fillRect(0, 0, W, H);
 
     let y = PADDING_Y;
