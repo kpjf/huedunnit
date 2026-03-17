@@ -1,11 +1,10 @@
 <script setup>
 import { ref, watch, onMounted, onUnmounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import TopMenu from '../components/TopMenu.vue';
 import SeedModal from '../components/SeedModal.vue';
 import GameBoard from '../components/GameBoard.vue';
 import GuessInput from '../components/GuessInput.vue';
-import IntroScreen from '../components/IntroScreen.vue';
 import ConfettiCanvas from '../components/ConfettiCanvas.vue';
 import OutroScreen from '../components/OutroScreen.vue';
 import StatsScreen from '../components/StatsScreen.vue';
@@ -13,7 +12,6 @@ import { useGame } from '../game/useGame.js';
 import { useHaptics } from '../composables/useHaptics.js';
 import { saveDailyState, loadDailyState } from '../game/useDailyStorage.js';
 import { recordResult, loadStats, checkAndExpireStreak } from '../game/useStats.js';
-import { useAuthStore } from '../stores/auth.js';
 import { useStatsStore } from '../stores/stats.js';
 import { useShareImage } from '../composables/useShareImage.js';
 
@@ -38,9 +36,9 @@ const {
 } = useGame();
 
 const router = useRouter();
-const authStore = useAuthStore();
+const route = useRoute();
 const statsStore = useStatsStore();
-const screen = ref('intro');
+const screen = ref('game');
 const darkMode = ref(localStorage.getItem('mastermind-darkMode') !== 'false');
 const showSeedModal = ref(false);
 const showConfetti = ref(false);
@@ -130,7 +128,7 @@ function toggleDarkMode() {
 }
 
 function handleNewGame() {
-    screen.value = 'intro';
+    router.push('/');
 }
 
 function handleSeedConfirm(seed) {
@@ -150,6 +148,12 @@ function handleKeydown(e) {
 
 onMounted(() => {
     document.addEventListener('keydown', handleKeydown);
+    const { type, mode } = route.query;
+    if (type === 'random') {
+        handlePlayRandom(mode || 'classic');
+    } else {
+        handlePlayDaily(mode || 'classic');
+    }
 });
 
 onUnmounted(() => {
@@ -171,26 +175,11 @@ async function handleReviewShare() {
         },
     });
 }
-
-const onLogin = () => router.push('/login');
-const onLogout = () => authStore.logout();
-const onStats = () => router.push('/stats');
 </script>
 
 <template>
-    <IntroScreen
-        v-if="screen === 'intro'"
-        :is-authenticated="authStore.isAuthenticated"
-        @play-daily="handlePlayDaily"
-        @play-random="handlePlayRandom"
-        @login="onLogin"
-        @signup="router.push('/signup')"
-        @logout="onLogout"
-        @stats="onStats"
-    />
-
     <OutroScreen
-        v-else-if="screen === 'outro'"
+        v-if="screen === 'outro'"
         :won="won"
         :guess-count="guesses.length"
         :guesses="guesses"

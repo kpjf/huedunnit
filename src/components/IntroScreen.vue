@@ -10,6 +10,7 @@ const today = new Date().toLocaleDateString('en-US', {
 
 const props = defineProps({
     isAuthenticated: { type: Boolean, default: false },
+    completedModes: { type: Object, default: () => ({}) },
 });
 
 const emit = defineEmits(['play-daily', 'play-random', 'login', 'signup', 'logout', 'stats']);
@@ -29,8 +30,8 @@ const emit = defineEmits(['play-daily', 'play-random', 'login', 'signup', 'logou
                 <p class="intro-description">Break the secret code. A new puzzle every day.</p>
 
                 <div class="mode-toggle">
-                    <button class="mode-btn" @click="emit('play-daily', 'quick')">Quick</button>
-                    <button class="mode-btn" @click="emit('play-daily', 'classic')">Classic</button>
+                    <button class="mode-btn" :class="{ completed: completedModes.quick }" @click="emit('play-daily', 'quick')">Quick</button>
+                    <button class="mode-btn" :class="{ completed: completedModes.classic }" @click="emit('play-daily', 'classic')">Classic</button>
                 </div>
 
                 <div class="intro-puzzle-date">
@@ -146,14 +147,18 @@ const emit = defineEmits(['play-daily', 'play-random', 'login', 'signup', 'logou
     flex: 1;
     font-size: 1rem;
     font-weight: 600;
-    background: #000;
+    background: #fff;
     border: none;
     border-radius: 100px;
     width: 200px;
-    color: #fff;
+    color: #000;
     cursor: pointer;
     transition: all 0.15s;
     padding: 12px 20px;
+}
+
+.mode-btn.completed {
+    opacity: 0.5;
 }
 
 .mode-btn.active {
