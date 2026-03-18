@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useAuth } from '../composables/useAuth.js';
+import AppButton from '../components/AppButton.vue';
 
 const { login, isLoading, error } = useAuth();
 
@@ -79,10 +80,10 @@ const appName = import.meta.env.VITE_APP_NAME || 'App';
 
                 <p v-if="localError || error" class="error-msg">{{ localError || error }}</p>
 
-                <button type="submit" class="submit-btn" :disabled="!canSubmit">
+                <AppButton type="submit" :full="true" :disabled="!canSubmit" class="submit-btn">
                     <span v-if="isLoading">Signing in…</span>
                     <span v-else>Sign in</span>
-                </button>
+                </AppButton>
 
                 <p class="switch-link">
                     Don't have an account?
@@ -209,26 +210,7 @@ input:disabled {
 }
 
 .submit-btn {
-    width: 100%;
-    padding: 0.7rem;
-    background: var(--text-primary);
-    color: var(--bg-primary);
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity 0.15s;
     margin-top: 0.5rem;
-}
-
-.submit-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.submit-btn:not(:disabled):hover {
-    opacity: 0.75;
 }
 
 .switch-link {

@@ -1,4 +1,6 @@
 <script setup>
+import AppButton from './AppButton.vue';
+
 defineProps({
     darkMode: {
         type: Boolean,
@@ -33,8 +35,8 @@ defineEmits(['toggle-dark-mode', 'new-game']);
                 </RouterLink>
             </div>
             <div class="menu-right">
-                <button
-                    class="btn btn-menu"
+                <AppButton
+                    variant="icon"
                     title="Toggle dark mode"
                     @click="$emit('toggle-dark-mode')"
                 >
@@ -46,12 +48,10 @@ defineEmits(['toggle-dark-mode', 'new-game']);
                         xmlns="http://www.w3.org/2000/svg"
                         :style="{ color: darkMode ? '#fff' : '#111' }"
                     >
-                        <!-- plate -->
                         <rect x="1" y="1" width="16" height="20" rx="3" stroke="currentColor" stroke-width="1.5"/>
-                        <!-- rocker: up = light, down = dark -->
                         <rect x="4" :y="darkMode ? 11 : 3" width="10" height="8" rx="2" fill="currentColor"/>
                     </svg>
-                </button>
+                </AppButton>
             </div>
         </div>
     </div>
@@ -105,20 +105,6 @@ defineEmits(['toggle-dark-mode', 'new-game']);
     justify-content: flex-end;
 }
 
-.btn-menu {
-    background: transparent;
-    padding: 8px 14px;
-    border: none;
-    cursor: pointer;
-    transition: opacity 0.15s;
-    appearance: none;
-    display: flex;
-    align-items: center;
-}
-
-.btn-menu:hover {
-    opacity: 0.7;
-}
 
 @media (max-width: 480px) {
     .top-menu {
@@ -129,10 +115,7 @@ defineEmits(['toggle-dark-mode', 'new-game']);
         font-size: 1.2em;
     }
 
-    .btn-menu {
-        padding: 7px 12px;
-        font-size: 0.8em;
-    }
+
 }
 
 @media (max-width: 380px) {

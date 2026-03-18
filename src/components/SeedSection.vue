@@ -1,5 +1,6 @@
 <script setup>
     import { computed } from 'vue';
+    import AppButton from './AppButton.vue';
 
     const props = defineProps({
         currentSeed: {
@@ -26,18 +27,8 @@
             {{ seedText }}
         </div>
         <div class="seed-input-group">
-            <button
-                class="btn btn-seed"
-                @click="$emit('enter-seed')"
-            >
-                Enter Seed Phrase
-            </button>
-            <button
-                class="btn btn-random"
-                @click="$emit('random-game')"
-            >
-                Random Game
-            </button>
+            <AppButton class="seed-btn" @click="$emit('enter-seed')">Enter Seed Phrase</AppButton>
+            <AppButton variant="secondary" class="seed-btn" @click="$emit('random-game')">Random Game</AppButton>
         </div>
         <p class="seed-hint">
             Click "Enter Seed Phrase" to create a reproducible game, or "Random Game" for a new challenge
@@ -76,29 +67,8 @@
     margin-bottom: 10px;
 }
 
-.btn-seed {
-    background: var(--text-primary);
-    color: var(--bg-primary);
-    padding: 9px 14px;
-    font-size: 0.9em;
+.seed-btn {
     flex: 1;
-}
-
-.btn-seed:hover {
-    opacity: 0.85;
-}
-
-.btn-random {
-    background: #4caf50;
-    color: white;
-    padding: 9px 14px;
-    font-size: 0.9em;
-    flex: 1;
-}
-
-.btn-random:hover {
-    background: #45a049;
-    opacity: 0.95;
 }
 
 .seed-hint {

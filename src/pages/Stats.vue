@@ -8,7 +8,9 @@ const router = useRouter();
 const statsStore = useStatsStore();
 
 onMounted(() => {
-    statsStore.fetchStats();
+    if (statsStore.stats === null) {
+        statsStore.fetchStats();
+    }
 });
 
 function modeStats(mode) {

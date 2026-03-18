@@ -1,5 +1,6 @@
 <script setup>
     import { ref, watch, nextTick } from 'vue';
+    import AppButton from './AppButton.vue';
 
     const props = defineProps({
         visible: {
@@ -54,18 +55,8 @@
                     @keydown.esc="handleCancel"
                 >
                 <div class="modal-actions">
-                    <button
-                        class="btn btn-secondary"
-                        @click="handleCancel"
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        class="btn btn-primary"
-                        @click="handleConfirm"
-                    >
-                        Start Game
-                    </button>
+                    <AppButton variant="secondary" @click="handleCancel">Cancel</AppButton>
+                    <AppButton @click="handleConfirm">Start Game</AppButton>
                 </div>
             </div>
         </div>

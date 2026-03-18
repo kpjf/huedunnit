@@ -30,6 +30,7 @@ function handleSelect(color) {
 .color-buttons {
     display: flex;
     gap: 4px;
+    justify-content: center;
 }
 
 .color-btn {

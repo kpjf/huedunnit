@@ -18,6 +18,14 @@ export const useStatsStore = defineStore('stats', () => {
     const isLoading = ref(false)
     const error = ref(null)
 
+    function saveLocalStats(data) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+    }
+
+    function stripMeta({ _id, userId, createdAt, ...rest }) {
+        return rest
+    }
+
     async function fetchStats() {
         isLoading.value = true
         error.value = null
@@ -25,14 +33,17 @@ export const useStatsStore = defineStore('stats', () => {
             const data = await statsApi.get()
             const isEmpty = !data || Object.keys(data).length === 0
             if (isEmpty) {
+                // First-time login: migrate any existing local stats up to the server
                 const local = loadLocalStats()
                 if (Object.keys(local).length > 0) {
-                    await statsApi.post(local)
+                    await statsApi.post(stripMeta(local))
                     stats.value = local
                 } else {
                     stats.value = {}
                 }
             } else {
+                // Server is source of truth — save server data locally
+                saveLocalStats(data)
                 stats.value = data
             }
         } catch (e) {
@@ -49,7 +60,8 @@ export const useStatsStore = defineStore('stats', () => {
         try {
             const local = loadLocalStats()
             if (Object.keys(local).length > 0) {
-                await statsApi.post(local)
+                await statsApi.post(stripMeta(local))
+                stats.value = local
             }
         } catch {
             // best-effort — ignore errors

@@ -1,9 +1,11 @@
 import { useAuthStore } from '../stores/auth.js'
+import { useStatsStore } from '../stores/stats.js'
 import { useRouter } from 'vue-router'
 import { computed } from 'vue'
 
 export function useAuth() {
   const authStore = useAuthStore()
+  const statsStore = useStatsStore()
   const router = useRouter()
 
   const permissionHierarchy = { user: 0, admin: 1, owner: 2 }
@@ -16,11 +18,13 @@ export function useAuth() {
 
   async function login(email, password) {
     await authStore.login(email, password)
+    await statsStore.fetchStats()
     navigateAfterLogin()
   }
 
   async function register(userData) {
     await authStore.register(userData)
+    await statsStore.fetchStats()
     navigateAfterLogin()
   }
 

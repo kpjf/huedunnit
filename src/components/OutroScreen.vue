@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue';
+import AppButton from './AppButton.vue';
 import { useShareImage } from '../composables/useShareImage.js';
 
 const props = defineProps({
@@ -79,25 +80,26 @@ async function handleShare() {
             </div>
 
             <div class="outro-actions">
-                <button class="btn btn-primary outro-btn" @click="handleShare">
+                <AppButton class="outro-btn" @click="handleShare">
                     {{ shared ? 'Saved!' : 'Share Results' }}
-                </button>
-                <button
-                    class="btn btn-secondary outro-btn"
+                </AppButton>
+                <AppButton
+                    variant="secondary"
+                    class="outro-btn"
                     :disabled="!stats"
                     :title="stats ? undefined : 'Play a daily puzzle to track stats'"
                     @click="$emit('show-stats')"
                 >
                     Stats
-                </button>
+                </AppButton>
             </div>
 
-            <button class="btn btn-ghost review-toggle-btn" @click="$emit('review')">
+            <AppButton variant="ghost" size="sm" full class="review-toggle-btn" @click="$emit('review')">
                 Review Your Solution
-            </button>
+            </AppButton>
 
             <div class="outro-footer">
-                <button class="btn btn-ghost" @click="$emit('play-again')">Play Again</button>
+                <AppButton variant="ghost" size="sm" full @click="$emit('play-again')">Play Again</AppButton>
             </div>
         </div>
     </div>
@@ -207,39 +209,15 @@ async function handleShare() {
 
 .outro-btn {
     flex: 1;
-    padding: 13px 20px;
-    font-size: 1em;
-}
-
-.outro-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
 }
 
 .review-toggle-btn {
-    width: 100%;
     margin-bottom: 12px;
 }
 
 .outro-footer {
     padding-top: 16px;
     border-top: 1px solid var(--border-color);
-}
-
-.btn-ghost {
-    background: transparent;
-    color: var(--text-secondary);
-    border: 1px solid var(--border-color);
-    padding: 8px 20px;
-    font-size: 0.88em;
-    font-weight: 600;
-    cursor: pointer;
-    width: 100%;
-}
-
-.btn-ghost:hover {
-    color: var(--text-primary);
-    border-color: var(--text-secondary);
 }
 
 @media (max-width: 480px) {

@@ -1,8 +1,9 @@
 <script setup>
+import AppButton from './AppButton.vue';
+
 const commitHash = __COMMIT_HASH__;
 
 const today = new Date().toLocaleDateString('en-US', {
-    weekday: 'long',
     year: 'numeric',
     month: 'long',
     day: 'numeric',
@@ -30,20 +31,30 @@ const emit = defineEmits(['play-daily', 'play-random', 'login', 'signup', 'logou
                 <p class="intro-description">Break the secret code. A new puzzle every day.</p>
 
                 <div class="mode-toggle">
-                    <button
-                        class="mode-btn"
-                        :class="{ completed: completedModes.quick }"
+                    <AppButton
+                        on-dark
+                        size="lg"
+                        :completed="completedModes.quick"
                         @click="emit('play-daily', 'quick')"
                     >
                         Quick
-                    </button>
-                    <button
-                        class="mode-btn"
-                        :class="{ completed: completedModes.classic }"
+                    </AppButton>
+                    <AppButton
+                        on-dark
+                        size="lg"
+                        :completed="completedModes.classic"
                         @click="emit('play-daily', 'classic')"
                     >
                         Classic
-                    </button>
+                    </AppButton>
+                    <AppButton
+                        variant="ghost"
+                        size="lg"
+                        on-dark
+                        @click="emit('play-random', 'quick')"
+                    >
+                        Random Game
+                    </AppButton>
                 </div>
 
                 <div class="intro-puzzle-date">
@@ -63,12 +74,20 @@ const emit = defineEmits(['play-daily', 'play-random', 'login', 'signup', 'logou
 
                 <div class="intro-account">
                     <template v-if="props.isAuthenticated">
-                        <button class="btn btn-ghost" @click="emit('stats')">Stats</button>
-                        <button class="btn btn-ghost" @click="emit('logout')">Logout</button>
+                        <AppButton variant="ghost" size="sm" on-dark @click="emit('stats')"
+                            >Stats</AppButton
+                        >
+                        <AppButton variant="ghost" size="sm" on-dark @click="emit('logout')"
+                            >Logout</AppButton
+                        >
                     </template>
                     <template v-else>
-                        <button class="btn btn-ghost" @click="emit('login')">Login</button>
-                        <button class="btn btn-ghost" @click="emit('signup')">Sign Up</button>
+                        <AppButton variant="ghost" size="sm" on-dark @click="emit('login')"
+                            >Login</AppButton
+                        >
+                        <AppButton variant="ghost" size="sm" on-dark @click="emit('signup')"
+                            >Sign Up</AppButton
+                        >
                     </template>
                 </div>
             </footer>
@@ -155,30 +174,6 @@ const emit = defineEmits(['play-daily', 'play-random', 'login', 'signup', 'logou
     flex-direction: column;
 }
 
-.mode-btn {
-    flex: 1;
-    font-size: 1rem;
-    font-weight: 600;
-    background: #fff;
-    border: none;
-    border-radius: 100px;
-    width: 200px;
-    color: #000;
-    cursor: pointer;
-    transition: all 0.15s;
-    padding: 12px 20px;
-}
-
-.mode-btn.completed {
-    opacity: 0.5;
-}
-
-.mode-btn.active {
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
 .mode-description {
     font-size: 0.8em;
     color: var(--text-secondary);
@@ -226,25 +221,6 @@ const emit = defineEmits(['play-daily', 'play-random', 'login', 'signup', 'logou
     gap: 10px;
     justify-content: center;
     padding-top: 16px;
-}
-
-.btn-ghost {
-    background: transparent;
-    color: #fff;
-    border: 1px solid #fff;
-    padding: 8px 20px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    flex: 1;
-    border-radius: 40px;
-    width: auto;
-    flex: 0 0 auto;
-}
-
-.btn-ghost:hover {
-    color: var(--text-primary);
-    border-color: var(--text-secondary);
 }
 
 .version-hash {
