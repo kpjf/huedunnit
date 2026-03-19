@@ -31,6 +31,18 @@ export function useGame() {
         syncState();
     }
 
+    function startStoryLevel(levelConfig, seed) {
+        const config = {
+            CODE_LENGTH: levelConfig.codeLength,
+            MAX_GUESSES: levelConfig.maxGuesses,
+            COLORS: levelConfig.colors,
+        };
+        currentSeed.value = seed;
+        gameConfig.value = config;
+        game = new Mastermind(seed, config);
+        syncState();
+    }
+
     function restoreGame(seed, mode, savedState) {
         currentSeed.value = seed;
         gameConfig.value = MODES[mode];
@@ -81,6 +93,7 @@ export function useGame() {
         canSubmit,
         startRandomGame,
         startSeededGame,
+        startStoryLevel,
         restoreGame,
         addColor,
         removeColorAt,

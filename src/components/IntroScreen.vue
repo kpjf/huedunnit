@@ -14,7 +14,7 @@ const props = defineProps({
     completedModes: { type: Object, default: () => ({}) },
 });
 
-const emit = defineEmits(['play-daily', 'play-random', 'login', 'signup', 'logout', 'stats']);
+const emit = defineEmits(['play-daily', 'play-random', 'story', 'login', 'signup', 'logout', 'stats']);
 </script>
 
 <template>
@@ -54,6 +54,14 @@ const emit = defineEmits(['play-daily', 'play-random', 'login', 'signup', 'logou
                         @click="emit('play-random', 'quick')"
                     >
                         Random Game
+                    </AppButton>
+                    <AppButton
+                        variant="ghost"
+                        size="lg"
+                        on-dark
+                        @click="emit('story')"
+                    >
+                        📖 Story Mode
                     </AppButton>
                 </div>
 

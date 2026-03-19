@@ -25,6 +25,10 @@ const routes = [
         component: () => import('./pages/Stats.vue'),
         meta: { requiresAuth: true },
     },
+    {
+        path: '/story',
+        component: () => import('./pages/Story.vue'),
+    },
 ];
 
 const router = createRouter({

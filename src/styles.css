@@ -180,6 +180,14 @@ html.dark-mode .key-peg.empty {
     background: #cc3399;
 }
 
+.peg.lime {
+    background: #55cc22;
+}
+
+.peg.maroon {
+    background: #882222;
+}
+
 /* Responsive */
 @media (max-width: 480px) {
     body {

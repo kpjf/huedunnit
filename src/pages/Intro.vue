@@ -28,6 +28,10 @@ function handlePlayDaily(mode) {
 function handlePlayRandom(mode) {
     router.push({ path: '/game', query: { type: 'random', mode } });
 }
+
+function handleStory() {
+    router.push('/story');
+}
 </script>
 
 <template>
@@ -36,6 +40,7 @@ function handlePlayRandom(mode) {
         :completed-modes="completedModes"
         @play-daily="handlePlayDaily"
         @play-random="handlePlayRandom"
+        @story="handleStory"
         @login="router.push('/login')"
         @signup="router.push('/signup')"
         @logout="authStore.logout()"

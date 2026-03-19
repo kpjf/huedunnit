@@ -12,11 +12,22 @@ const props = defineProps({
     maxGuesses: { type: Number, required: true },
     codeLength: { type: Number, required: true },
     stats: { type: Object, default: null },
+    storyLevel: { type: Object, default: null },
+    storyResult: { type: Object, default: null },  // { coinsEarned, stars }
+    nextStoryLevelAvailable: { type: Boolean, default: false },
 });
 
-const emit = defineEmits(['play-again', 'show-stats', 'review']);
+const emit = defineEmits(['play-again', 'show-stats', 'review', 'next-story-level']);
 
-const isDaily = computed(() => props.seed !== null);
+const isDaily = computed(() => props.seed !== null && !props.storyLevel);
+const isStory = computed(() => !!props.storyLevel);
+
+const storyStars = computed(() => props.storyResult?.stars ?? 0);
+const storyCoins = computed(() => props.storyResult?.coinsEarned ?? 0);
+
+function starsDisplay(n) {
+    return '★'.repeat(n) + '☆'.repeat(3 - n);
+}
 
 const today = new Date().toLocaleDateString('en-US', {
     weekday: 'long',
@@ -67,6 +78,17 @@ async function handleShare() {
                 </template>
             </p>
 
+            <!-- Story mode: stars + coins earned -->
+            <div v-if="isStory && won" class="story-result-block">
+                <div class="story-stars">{{ starsDisplay(storyStars) }}</div>
+                <div class="story-coins">
+                    <span class="coins-icon">🪙</span>
+                    <span class="coins-amount">+{{ storyCoins }}</span>
+                    <span class="coins-label">coins earned</span>
+                </div>
+                <p v-if="storyLevel" class="story-level-name">Level {{ storyLevel.id }} — {{ storyLevel.title }}</p>
+            </div>
+
             <div class="secret-code-block">
                 <span class="secret-code-label">The secret code</span>
                 <div class="secret-code">
@@ -79,28 +101,50 @@ async function handleShare() {
                 <span class="date-value">{{ today }}</span>
             </div>
 
-            <div class="outro-actions">
-                <AppButton class="outro-btn" @click="handleShare">
-                    {{ shared ? 'Saved!' : 'Share Results' }}
-                </AppButton>
-                <AppButton
-                    variant="secondary"
-                    class="outro-btn"
-                    :disabled="!stats"
-                    :title="stats ? undefined : 'Play a daily puzzle to track stats'"
-                    @click="$emit('show-stats')"
-                >
-                    Stats
-                </AppButton>
-            </div>
+            <!-- Story mode actions -->
+            <template v-if="isStory">
+                <div class="outro-actions">
+                    <AppButton
+                        v-if="won && nextStoryLevelAvailable"
+                        class="outro-btn"
+                        @click="$emit('next-story-level')"
+                    >
+                        Next Level →
+                    </AppButton>
+                    <AppButton variant="ghost" size="sm" full class="review-toggle-btn" @click="$emit('review')">
+                        Review Your Solution
+                    </AppButton>
+                </div>
+                <div class="outro-footer">
+                    <AppButton variant="ghost" size="sm" full @click="$emit('play-again')">Back to Map</AppButton>
+                </div>
+            </template>
 
-            <AppButton variant="ghost" size="sm" full class="review-toggle-btn" @click="$emit('review')">
-                Review Your Solution
-            </AppButton>
+            <!-- Standard actions -->
+            <template v-else>
+                <div class="outro-actions">
+                    <AppButton class="outro-btn" @click="handleShare">
+                        {{ shared ? 'Saved!' : 'Share Results' }}
+                    </AppButton>
+                    <AppButton
+                        variant="secondary"
+                        class="outro-btn"
+                        :disabled="!stats"
+                        :title="stats ? undefined : 'Play a daily puzzle to track stats'"
+                        @click="$emit('show-stats')"
+                    >
+                        Stats
+                    </AppButton>
+                </div>
 
-            <div class="outro-footer">
-                <AppButton variant="ghost" size="sm" full @click="$emit('play-again')">Play Again</AppButton>
-            </div>
+                <AppButton variant="ghost" size="sm" full class="review-toggle-btn" @click="$emit('review')">
+                    Review Your Solution
+                </AppButton>
+
+                <div class="outro-footer">
+                    <AppButton variant="ghost" size="sm" full @click="$emit('play-again')">Play Again</AppButton>
+                </div>
+            </template>
         </div>
     </div>
 </template>
@@ -218,6 +262,51 @@ async function handleShare() {
 .outro-footer {
     padding-top: 16px;
     border-top: 1px solid var(--border-color);
+}
+
+.story-result-block {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.story-stars {
+    font-size: 1.6em;
+    color: #ffd700;
+    letter-spacing: 4px;
+    margin-bottom: 10px;
+}
+
+.story-coins {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.coins-icon { font-size: 1.1em; }
+
+.coins-amount {
+    font-size: 1.2em;
+    font-weight: 800;
+    color: #ffd700;
+}
+
+.coins-label {
+    font-size: 0.85em;
+    color: var(--text-secondary);
+}
+
+.story-level-name {
+    font-size: 0.78em;
+    color: var(--text-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
 }
 
 @media (max-width: 480px) {

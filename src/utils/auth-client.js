@@ -126,3 +126,10 @@ export const statsApi = {
   get: () => dataClient.get('/v1/stats'),
   post: (data) => dataClient.post('/v1/stats', data),
 }
+
+export const storyApi = {
+  get: () => dataClient.get('/v1/story'),
+  complete: (data) => dataClient.post('/v1/story/complete', data),
+  attempt: (levelId, date) => dataClient.post('/v1/story/attempt', { levelId, date }),
+  addCoins: (amount) => dataClient.post('/v1/story/coins', { amount }),
+}
