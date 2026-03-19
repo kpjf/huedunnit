@@ -6,6 +6,10 @@ defineProps({
         type: Boolean,
         required: true,
     },
+    timer: {
+        type: String,
+        default: null,
+    },
 });
 
 defineEmits(['toggle-dark-mode', 'new-game']);
@@ -35,6 +39,7 @@ defineEmits(['toggle-dark-mode', 'new-game']);
                 </RouterLink>
             </div>
             <div class="menu-right">
+                <span v-if="timer" class="timer">{{ timer }}</span>
                 <AppButton
                     variant="icon"
                     title="Toggle dark mode"
@@ -88,21 +93,20 @@ defineEmits(['toggle-dark-mode', 'new-game']);
 }
 
 
-.menu-center {
-    flex: 1;
-    text-align: center;
-}
-
-.menu-center h2 {
-    font-size: 1.4em;
+.timer {
+    font-size: 1.1em;
     font-weight: 700;
-    margin: 0;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-primary);
+    letter-spacing: 0.02em;
 }
 
 .menu-right {
     flex: 1;
     display: flex;
+    align-items: center;
     justify-content: flex-end;
+    gap: 12px;
 }
 
 
@@ -110,21 +114,11 @@ defineEmits(['toggle-dark-mode', 'new-game']);
     .top-menu {
         padding: 8px 12px;
     }
-
-    .menu-center h2 {
-        font-size: 1.2em;
-    }
-
-
 }
 
 @media (max-width: 380px) {
     .top-menu {
         padding: 10px 12px;
-    }
-
-    .menu-center h2 {
-        font-size: 1.1em;
     }
 }
 </style>

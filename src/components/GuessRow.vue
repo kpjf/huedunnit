@@ -7,14 +7,20 @@ const props = defineProps({
     code: { type: Array, default: null },
     feedback: { type: Object, default: null },
     isActive: { type: Boolean, default: false },
+    revealAll: { type: Boolean, default: false },
 });
 
 const emit = defineEmits(['remove-at']);
 
+// null = always show (normal mode); Set = only show indices in set (reveal animation)
+const revealedGuessPegs = ref(null);
+
 const displayPegs = computed(() => {
     const slots = [];
     for (let i = 0; i < props.codeLength; i++) {
-        slots.push(props.code?.[i] ?? null);
+        const color = props.code?.[i] ?? null;
+        const visible = revealedGuessPegs.value === null || revealedGuessPegs.value.has(i);
+        slots.push(visible ? color : null);
     }
     return slots;
 });
@@ -34,29 +40,55 @@ const flippingOut = ref(-1);
 const flippingIn = ref(-1);
 const timers = [];
 
-watch(() => props.feedback, (newVal, oldVal) => {
-    if (newVal && oldVal === null) {
-        revealed.value = [];
-        flippingOut.value = -1;
-        flippingIn.value = -1;
-        timers.forEach(clearTimeout);
-        timers.length = 0;
-
-        for (let i = 0; i < props.codeLength; i++) {
-            timers.push(setTimeout(() => { flippingOut.value = i; }, i * 200));
-            timers.push(setTimeout(() => {
-                revealed.value.push(i);
-                flippingOut.value = -1;
-                flippingIn.value = i;
-            }, i * 200 + 150));
-            timers.push(setTimeout(() => { flippingIn.value = -1; }, i * 200 + 300));
-        }
-    }
-});
-
 // Guess peg flip-in when a colour is added
 const pegFlipIndex = ref(-1);
 let pegFlipTimer = null;
+
+function runRevealAnimation(animateGuessPegs = false) {
+    revealed.value = [];
+    flippingOut.value = -1;
+    flippingIn.value = -1;
+    timers.forEach(clearTimeout);
+    timers.length = 0;
+
+    if (animateGuessPegs && props.code) {
+        revealedGuessPegs.value = new Set();
+        for (let i = 0; i < props.codeLength; i++) {
+            timers.push(setTimeout(() => {
+                revealedGuessPegs.value = new Set([...revealedGuessPegs.value, i]);
+                pegFlipIndex.value = i;
+            }, i * 200));
+            timers.push(setTimeout(() => {
+                if (pegFlipIndex.value === i) pegFlipIndex.value = -1;
+            }, i * 200 + 200));
+        }
+        timers.push(setTimeout(() => { revealedGuessPegs.value = null; }, props.codeLength * 200 + 300));
+    }
+
+    for (let i = 0; i < props.codeLength; i++) {
+        timers.push(setTimeout(() => { flippingOut.value = i; }, i * 200));
+        timers.push(setTimeout(() => {
+            revealed.value.push(i);
+            flippingOut.value = -1;
+            flippingIn.value = i;
+        }, i * 200 + 150));
+        timers.push(setTimeout(() => { flippingIn.value = -1; }, i * 200 + 300));
+    }
+}
+
+watch(() => props.feedback, (newVal, oldVal) => {
+    if (newVal && oldVal === null) {
+        runRevealAnimation();
+    }
+});
+
+// Triggered when loading a completed game for review — runs after DOM update so
+// props.feedback is guaranteed to be set for all rows simultaneously.
+watch(() => props.revealAll, (val) => {
+    if (val && props.feedback) {
+        runRevealAnimation(true);
+    }
+}, { flush: 'post' });
 
 watch(() => props.code?.length, (newLen, oldLen) => {
     if ((newLen ?? 0) > (oldLen ?? 0)) {

@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue';
+import AppButton from './AppButton.vue';
 
 const props = defineProps({
     stats: { type: Object, required: true },
@@ -33,7 +34,11 @@ const maxDistCount = computed(() => {
                         <div
                             class="dist-bar"
                             :class="{ highlight: won && guessCount === n }"
-                            :style="{ width: ((stats.distribution[String(n)] ?? 0) / maxDistCount * 100) + '%' }"
+                            :style="{
+                                width:
+                                    ((stats.distribution[String(n)] ?? 0) / maxDistCount) * 100 +
+                                    '%',
+                            }"
                         >
                             <span v-if="stats.distribution[String(n)]">
                                 {{ stats.distribution[String(n)] }}
@@ -44,7 +49,7 @@ const maxDistCount = computed(() => {
             </div>
 
             <div class="stats-footer">
-                <button class="btn btn-ghost" @click="$emit('close')">Back</button>
+                <AppButton variant="ghost" size="md" @click="$emit('close')">Back</AppButton>
             </div>
         </div>
     </div>
@@ -159,7 +164,6 @@ const maxDistCount = computed(() => {
 
 .stats-footer {
     padding-top: 16px;
-    border-top: 1px solid var(--border-color);
 }
 
 .btn-ghost {

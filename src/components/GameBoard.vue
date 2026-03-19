@@ -8,6 +8,7 @@ const props = defineProps({
     gameOver: { type: Boolean, required: true },
     maxGuesses: { type: Number, required: true },
     codeLength: { type: Number, required: true },
+    animateRows: { type: Boolean, default: false },
 });
 
 const emit = defineEmits(['remove-at']);
@@ -75,6 +76,7 @@ watch(() => props.maxGuesses, computeSizes);
                 :code="row.code"
                 :feedback="row.feedback"
                 :is-active="row.type === 'active'"
+                :reveal-all="animateRows"
                 @remove-at="emit('remove-at', $event)"
             />
         </div>

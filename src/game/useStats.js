@@ -6,6 +6,7 @@ function emptyModeStats() {
         lastWonDate: null,
         lastRecordedDate: null,
         distribution: {},
+        dailies: [],
     };
 }
 
@@ -23,7 +24,7 @@ function yesterday(dateStr) {
     return d.toISOString().slice(0, 10);
 }
 
-export function recordResult(date, mode, won, guessCount) {
+export function recordResult(date, mode, won, guessCount, durationSeconds) {
     const all = loadAll();
     const stats = all[mode] ?? emptyModeStats();
 
@@ -35,6 +36,8 @@ export function recordResult(date, mode, won, guessCount) {
         stats.lastWonDate = date;
         const key = String(guessCount);
         stats.distribution[key] = (stats.distribution[key] ?? 0) + 1;
+        if (!stats.dailies) stats.dailies = [];
+        stats.dailies.push({ date, durationSeconds: durationSeconds ?? null });
     } else {
         stats.streak = 0;
     }

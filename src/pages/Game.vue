@@ -13,9 +13,32 @@ import { useHaptics } from '../composables/useHaptics.js';
 import { saveDailyState, loadDailyState } from '../game/useDailyStorage.js';
 import { recordResult, loadStats, checkAndExpireStreak } from '../game/useStats.js';
 import { useStatsStore } from '../stores/stats.js';
-import { useShareImage } from '../composables/useShareImage.js';
+import AppButton from '../components/AppButton.vue';
 
 const { celebrate } = useHaptics();
+
+const elapsedSeconds = ref(0);
+let timerInterval = null;
+
+function startTimer() {
+    elapsedSeconds.value = 0;
+    timerInterval = setInterval(() => {
+        elapsedSeconds.value++;
+    }, 1000);
+}
+
+function stopTimer() {
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+}
+
+function formatTime(seconds) {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s.toString().padStart(2, '0')}`;
+}
 
 const {
     currentSeed,
@@ -39,6 +62,7 @@ const router = useRouter();
 const route = useRoute();
 const statsStore = useStatsStore();
 const screen = ref('game');
+const animateBoard = ref(false);
 const darkMode = ref(localStorage.getItem('mastermind-darkMode') !== 'false');
 const showSeedModal = ref(false);
 const showConfetti = ref(false);
@@ -54,12 +78,19 @@ watch(won, (val) => {
 
 watch(gameOver, (val) => {
     if (val) {
+        stopTimer();
         if (currentSeed.value === dailySeed()) {
-            recordResult(currentSeed.value, currentMode.value, won.value, guesses.value.length);
+            recordResult(
+                currentSeed.value,
+                currentMode.value,
+                won.value,
+                guesses.value.length,
+                elapsedSeconds.value,
+            );
             currentStats.value = loadStats(currentMode.value);
             statsStore.pushStats();
         }
-        if (!won.value) screen.value = 'outro';
+        if (!won.value && screen.value === 'game') screen.value = 'outro';
     }
 });
 
@@ -84,8 +115,13 @@ function handlePlayDaily(mode) {
     if (saved) {
         restoreGame(date, mode, saved);
         if (saved.gameOver) {
-            currentStats.value = loadStats(mode);
-            screen.value = 'outro';
+            const stats = loadStats(mode);
+            currentStats.value = stats;
+            const statEntry = stats.dailies?.find((d) => d.date === date);
+            const duration = saved.elapsedSeconds || statEntry?.durationSeconds || 0;
+            elapsedSeconds.value = duration;
+            animateBoard.value = true;
+            screen.value = 'review';
         } else {
             screen.value = 'game';
         }
@@ -98,11 +134,12 @@ function handlePlayDaily(mode) {
 watch(
     guesses,
     () => {
-        if (currentSeed.value === dailySeed()) {
+        if (currentSeed.value === dailySeed() && !screen.value.startsWith('review')) {
             saveDailyState(dailySeed(), currentMode.value, {
                 guesses: guesses.value,
                 gameOver: gameOver.value,
                 won: won.value,
+                elapsedSeconds: elapsedSeconds.value,
             });
         }
     },
@@ -154,31 +191,17 @@ onMounted(() => {
     } else {
         handlePlayDaily(mode || 'classic');
     }
+    if (!gameOver.value) startTimer();
 });
 
 onUnmounted(() => {
     document.removeEventListener('keydown', handleKeydown);
+    stopTimer();
 });
-
-const reviewShared = ref(false);
-const { shareReview } = useShareImage();
-
-async function handleReviewShare() {
-    await shareReview({
-        guesses: guesses.value,
-        codeLength: gameConfig.value.CODE_LENGTH,
-        maxGuesses: gameConfig.value.MAX_GUESSES,
-        isDaily: !!currentSeed.value,
-        onCopied: () => {
-            reviewShared.value = true;
-            setTimeout(() => { reviewShared.value = false; }, 2000);
-        },
-    });
-}
 </script>
 
 <template>
-    <OutroScreen
+    <Screen
         v-if="screen === 'outro'"
         :won="won"
         :guess-count="guesses.length"
@@ -199,12 +222,13 @@ async function handleReviewShare() {
         :max-guesses="gameConfig.MAX_GUESSES"
         :won="won"
         :guess-count="guesses.length"
-        @close="screen = 'outro'"
+        @close="screen = 'review'"
     />
 
     <template v-else>
         <TopMenu
             :dark-mode="darkMode"
+            :timer="!gameOver || screen === 'review' ? formatTime(elapsedSeconds) : null"
             @toggle-dark-mode="toggleDarkMode"
             @new-game="handleNewGame"
         />
@@ -217,6 +241,7 @@ async function handleReviewShare() {
                     :game-over="gameOver"
                     :max-guesses="gameConfig.MAX_GUESSES"
                     :code-length="gameConfig.CODE_LENGTH"
+                    :animate-rows="animateBoard"
                     @remove-at="removeColorAt"
                 />
 
@@ -230,20 +255,14 @@ async function handleReviewShare() {
                 />
 
                 <div v-if="screen === 'review'" class="review-bar">
-                    <button class="btn btn-secondary review-bar-btn" @click="screen = 'outro'">
-                        ← Back
-                    </button>
-                    <button class="btn btn-primary review-bar-btn" @click="handleReviewShare">
-                        {{ reviewShared ? 'Saved!' : 'Share' }}
-                    </button>
-                    <button
-                        class="btn btn-secondary review-bar-btn"
+                    <AppButton
+                        variant="ghost"
                         :disabled="!currentStats"
                         :title="currentStats ? undefined : 'Play a daily puzzle to track stats'"
                         @click="screen = 'stats'"
                     >
-                        View Stats
-                    </button>
+                        View Results
+                    </AppButton>
                 </div>
             </main>
         </div>
@@ -272,7 +291,7 @@ main {
     display: flex;
     gap: 10px;
     padding: 14px 18px;
-    border-top: 1px solid var(--border-color);
+    justify-content: center;
     flex-shrink: 0;
 }
 
