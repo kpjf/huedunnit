@@ -13,6 +13,68 @@ function loadLocalStats() {
     }
 }
 
+function todayStr() {
+    return new Date().toISOString().slice(0, 10)
+}
+
+function yesterdayOf(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00')
+    d.setDate(d.getDate() - 1)
+    return d.toISOString().slice(0, 10)
+}
+
+/**
+ * Server is gospel. But if local has a result recorded TODAY that the server
+ * doesn't have yet (e.g. played while session was expired, then logged in),
+ * inject only that today-only data so the streak survives.
+ */
+function mergeLocalTodayIntoServer(server, local) {
+    const today = todayStr()
+    let changed = false
+    const merged = { ...server }
+
+    for (const mode of Object.keys(local)) {
+        const localMode = local[mode]
+        // Only care about modes where something was recorded today locally
+        if (localMode.lastRecordedDate !== today) continue
+
+        const serverMode = merged[mode] ?? {
+            streak: 0,
+            lastWonDate: null,
+            lastRecordedDate: null,
+            distribution: {},
+            dailies: [],
+        }
+        // Server already has today's result — nothing to inject
+        if (serverMode.lastRecordedDate === today) continue
+
+        changed = true
+        const won = localMode.lastWonDate === today
+        const updated = { ...serverMode, lastRecordedDate: today }
+
+        if (won) {
+            updated.lastWonDate = today
+            const streakContinues = serverMode.lastWonDate === yesterdayOf(today)
+            updated.streak = streakContinues ? serverMode.streak + 1 : 1
+            const todayDaily = (localMode.dailies ?? []).find((d) => d.date === today)
+            if (todayDaily) {
+                updated.dailies = [...(serverMode.dailies ?? []), todayDaily]
+                if (todayDaily.guessCount != null) {
+                    const key = String(todayDaily.guessCount)
+                    updated.distribution = { ...serverMode.distribution }
+                    updated.distribution[key] = (updated.distribution[key] ?? 0) + 1
+                }
+            }
+        } else {
+            updated.streak = 0
+        }
+
+        merged[mode] = updated
+    }
+
+    return { merged, changed }
+}
+
 export const useStatsStore = defineStore('stats', () => {
     const stats = ref(null)
     const isLoading = ref(false)
@@ -42,9 +104,16 @@ export const useStatsStore = defineStore('stats', () => {
                     stats.value = {}
                 }
             } else {
-                // Server is source of truth — save server data locally
-                saveLocalStats(data)
-                stats.value = data
+                // Server is source of truth, but rescue any result recorded today
+                // while the user was unauthenticated (e.g. expired session).
+                const local = loadLocalStats()
+                const { merged, changed } = mergeLocalTodayIntoServer(data, local)
+                saveLocalStats(merged)
+                stats.value = merged
+                if (changed) {
+                    // Push the merged result back so the server is also up to date
+                    statsApi.post(stripMeta(merged)).catch(() => {})
+                }
             }
         } catch (e) {
             error.value = e.message

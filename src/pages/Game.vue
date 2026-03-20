@@ -186,7 +186,9 @@ function handlePlayStory(levelId) {
     const level = STORY_LEVELS.find((l) => l.id === levelId);
     if (!level) { router.push('/story'); return; }
     useAttempt(levelId);
-    startStoryLevel(level.config, level.seed);
+    startStoryLevel(level.config, null); // null = random code each attempt; config is fixed
+    storyResult.value = null;
+    showConfetti.value = false;
     screen.value = 'game';
 }
 
@@ -207,6 +209,18 @@ function handleNextStoryLevel() {
         router.push('/story');
     }
 }
+
+// Re-init when navigating to a different story level (same route, new query params)
+watch(
+    () => route.query.level,
+    (newLevel, oldLevel) => {
+        if (newLevel && oldLevel && newLevel !== oldLevel && route.query.type === 'story') {
+            stopTimer();
+            handlePlayStory(Number(newLevel));
+            startTimer();
+        }
+    },
+);
 
 function handleSeedConfirm(seed) {
     showSeedModal.value = false;

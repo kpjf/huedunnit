@@ -37,7 +37,7 @@ export function recordResult(date, mode, won, guessCount, durationSeconds) {
         const key = String(guessCount);
         stats.distribution[key] = (stats.distribution[key] ?? 0) + 1;
         if (!stats.dailies) stats.dailies = [];
-        stats.dailies.push({ date, durationSeconds: durationSeconds ?? null });
+        stats.dailies.push({ date, guessCount, durationSeconds: durationSeconds ?? null });
     } else {
         stats.streak = 0;
     }

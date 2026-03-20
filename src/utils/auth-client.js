@@ -1,6 +1,7 @@
 import { useAuthStore } from '../stores/auth.js'
 
 const TIMEOUT_MS = 10_000
+let reloadScheduled = false
 
 class AuthClient {
   #baseUrl
@@ -57,6 +58,12 @@ class AuthClient {
             this.#isRefreshing = false
           }
         }
+      }
+
+      const serverVersion = res.headers.get('x-app-version')
+      if (serverVersion && serverVersion !== __COMMIT_HASH__ && !reloadScheduled && !import.meta.env.DEV) {
+        reloadScheduled = true
+        window.location.reload()
       }
 
       if (!res.ok) {
