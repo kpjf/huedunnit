@@ -9,9 +9,10 @@ const props = defineProps({
     maxGuesses: { type: Number, required: true },
     codeLength: { type: Number, required: true },
     animateRows: { type: Boolean, default: false },
+    selectedPegIndex: { type: Number, default: null },
 });
 
-const emit = defineEmits(['remove-at']);
+const emit = defineEmits(['remove-at', 'select-slot']);
 
 const rows = computed(() => {
     const result = [];
@@ -77,7 +78,9 @@ watch(() => props.maxGuesses, computeSizes);
                 :feedback="row.feedback"
                 :is-active="row.type === 'active'"
                 :reveal-all="animateRows"
+                :selected-index="row.type === 'active' ? selectedPegIndex : null"
                 @remove-at="emit('remove-at', $event)"
+                @select-slot="emit('select-slot', $event)"
             />
         </div>
     </div>

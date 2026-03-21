@@ -38,6 +38,14 @@ export class Mastermind {
         }
     }
 
+    setColorAtIndex(index, color) {
+        if (index < 0 || index >= this.config.CODE_LENGTH) return;
+        while (this.currentGuess.length <= index) {
+            this.currentGuess.push(null);
+        }
+        this.currentGuess[index] = color;
+    }
+
     clearCurrentGuess() {
         this.currentGuess = [];
     }
@@ -49,7 +57,7 @@ export class Mastermind {
     }
 
     submitGuess() {
-        if (this.currentGuess.length !== this.config.CODE_LENGTH) return null;
+        if (this.currentGuess.length !== this.config.CODE_LENGTH || this.currentGuess.includes(null)) return null;
         if (this.gameOver) return null;
 
         const feedback = this.generateFeedback(this.currentGuess);

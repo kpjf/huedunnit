@@ -14,7 +14,11 @@ export function useGame() {
     const secretCode = ref([...game.getSecretCode()]);
 
     const remainingGuesses = computed(() => gameConfig.value.MAX_GUESSES - guesses.value.length);
-    const canSubmit = computed(() => currentGuess.value.length === gameConfig.value.CODE_LENGTH && !gameOver.value);
+    const canSubmit = computed(() =>
+        currentGuess.value.length === gameConfig.value.CODE_LENGTH &&
+        !currentGuess.value.includes(null) &&
+        !gameOver.value
+    );
 
     function syncState() {
         guesses.value = [...game.getGuesses()];
@@ -68,6 +72,11 @@ export function useGame() {
         currentGuess.value = [...game.getCurrentGuess()];
     }
 
+    function setColorAt(index, color) {
+        game.setColorAtIndex(index, color);
+        currentGuess.value = [...game.getCurrentGuess()];
+    }
+
     function clearGuess() {
         game.clearCurrentGuess();
         currentGuess.value = [];
@@ -97,6 +106,7 @@ export function useGame() {
         restoreGame,
         addColor,
         removeColorAt,
+        setColorAt,
         clearGuess,
         submitGuess,
     };

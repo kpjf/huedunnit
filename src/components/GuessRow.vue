@@ -8,9 +8,10 @@ const props = defineProps({
     feedback: { type: Object, default: null },
     isActive: { type: Boolean, default: false },
     revealAll: { type: Boolean, default: false },
+    selectedIndex: { type: Number, default: null },
 });
 
-const emit = defineEmits(['remove-at']);
+const emit = defineEmits(['remove-at', 'select-slot']);
 
 // null = always show (normal mode); Set = only show indices in set (reveal animation)
 const revealedGuessPegs = ref(null);
@@ -90,13 +91,17 @@ watch(() => props.revealAll, (val) => {
     }
 }, { flush: 'post' });
 
-watch(() => props.code?.length, (newLen, oldLen) => {
-    if ((newLen ?? 0) > (oldLen ?? 0)) {
-        clearTimeout(pegFlipTimer);
-        pegFlipIndex.value = (newLen ?? 0) - 1;
-        pegFlipTimer = setTimeout(() => { pegFlipIndex.value = -1; }, 200);
+watch(() => props.code, (newCode, oldCode) => {
+    if (!props.isActive || !newCode) return;
+    for (let i = 0; i < newCode.length; i++) {
+        if (newCode[i] != null && (oldCode == null || oldCode[i] == null)) {
+            clearTimeout(pegFlipTimer);
+            pegFlipIndex.value = i;
+            pegFlipTimer = setTimeout(() => { pegFlipIndex.value = -1; }, 200);
+            return;
+        }
     }
-});
+}, { deep: true });
 
 onUnmounted(() => {
     timers.forEach(clearTimeout);
@@ -119,9 +124,9 @@ const displayKeyPegs = computed(() => {
                 v-for="(color, i) in displayPegs"
                 :key="i"
                 class="peg"
-                :class="[color ?? 'empty', { 'peg-flip-in': i === pegFlipIndex }]"
-                :style="isActive && color ? { cursor: 'pointer' } : {}"
-                @click="isActive && color ? emit('remove-at', i) : undefined"
+                :class="[color ?? 'empty', { 'peg-flip-in': i === pegFlipIndex, 'peg-selected': isActive && selectedIndex === i }]"
+                :style="isActive ? { cursor: 'pointer' } : {}"
+                @click="isActive ? (color ? emit('remove-at', i) : emit('select-slot', i)) : undefined"
             />
         </div>
         <div class="key-pegs">
@@ -195,5 +200,14 @@ const displayKeyPegs = computed(() => {
 
 .peg.peg-flip-in {
     animation: flip-in 0.15s ease-out forwards;
+}
+
+@keyframes peg-pulse {
+    0%, 100% { box-shadow: 0 0 0 2px var(--text-primary); }
+    50% { box-shadow: 0 0 0 4px var(--text-primary); }
+}
+
+.peg.peg-selected {
+    animation: peg-pulse 0.9s ease-in-out infinite;
 }
 </style>

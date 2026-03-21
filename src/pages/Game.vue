@@ -44,8 +44,50 @@ function formatTime(seconds) {
 const {
     currentSeed, gameConfig, guesses, currentGuess, gameOver, won, secretCode,
     canSubmit, startRandomGame, startSeededGame, startStoryLevel, restoreGame,
-    addColor, removeColorAt, clearGuess, submitGuess,
+    addColor, removeColorAt, setColorAt, clearGuess, submitGuess,
 } = useGame();
+
+const selectedPegIndex = ref(null);
+
+function nextEmptySlot(afterIndex) {
+    const guess = currentGuess.value;
+    const len = gameConfig.value.CODE_LENGTH;
+    for (let i = afterIndex + 1; i < len; i++) {
+        if (i >= guess.length || guess[i] == null) return i;
+    }
+    for (let i = 0; i < afterIndex; i++) {
+        if (i >= guess.length || guess[i] == null) return i;
+    }
+    return null;
+}
+
+function handleAddColor(color) {
+    if (selectedPegIndex.value !== null) {
+        setColorAt(selectedPegIndex.value, color);
+        selectedPegIndex.value = nextEmptySlot(selectedPegIndex.value);
+    } else {
+        addColor(color);
+    }
+}
+
+function handleRemoveAt(index) {
+    removeColorAt(index);
+    selectedPegIndex.value = index;
+}
+
+function handleSelectSlot(index) {
+    selectedPegIndex.value = selectedPegIndex.value === index ? null : index;
+}
+
+function handleClearGuess() {
+    clearGuess();
+    selectedPegIndex.value = null;
+}
+
+function handleSubmitGuess() {
+    submitGuess();
+    selectedPegIndex.value = null;
+}
 
 const router = useRouter();
 const route = useRoute();
@@ -245,7 +287,7 @@ function handleShareReview() {
 function toggleDarkMode() { darkMode.value = !darkMode.value; }
 
 function handleKeydown(e) {
-    if (e.key === 'Enter' && !gameOver.value && canSubmit.value) submitGuess();
+    if (e.key === 'Enter' && !gameOver.value && canSubmit.value) handleSubmitGuess();
 }
 
 // ── Mount ──────────────────────────────────────────────────────────────────
@@ -322,16 +364,18 @@ onUnmounted(() => {
                     :max-guesses="gameConfig.MAX_GUESSES"
                     :code-length="gameConfig.CODE_LENGTH"
                     :animate-rows="animateBoard"
-                    @remove-at="removeColorAt"
+                    :selected-peg-index="selectedPegIndex"
+                    @remove-at="handleRemoveAt"
+                    @select-slot="handleSelectSlot"
                 />
 
                 <GuessInput
                     v-if="!gameOver"
                     :can-submit="canSubmit"
                     :colors="gameConfig.COLORS"
-                    @add-color="addColor"
-                    @clear="clearGuess"
-                    @submit="submitGuess"
+                    @add-color="handleAddColor"
+                    @clear="handleClearGuess"
+                    @submit="handleSubmitGuess"
                 />
 
                 <div v-if="screen === 'review'" class="review-bar">
