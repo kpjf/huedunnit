@@ -18,7 +18,14 @@
       "mcp__linear__list_issues",
       "Bash(node -e \":*)",
       "mcp__linear__save_comment",
-      "mcp__linear__save_issue"
+      "mcp__linear__save_issue",
+      "Bash(grep -E \"\\\\.\\(tsx|ts|jsx|js\\)$\")",
+      "Bash(find /c/Users/keith/dev/emmet-fun/hexcode/src -type f \\\\\\(-name *.tsx -o -name *.ts -o -name *.vue \\\\\\))",
+      "Bash(find /c/Users/keith/dev/emmet-fun/hexcode-api -type f \\\\\\(-name *.ts -o -name *.js \\\\\\))",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "mcp__linear__list_issue_statuses"
     ]
   }
 }

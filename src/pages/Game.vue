@@ -286,8 +286,54 @@ function handleShareReview() {
 
 function toggleDarkMode() { darkMode.value = !darkMode.value; }
 
+const COLOR_KEYS = {
+    r: 'red',
+    b: 'blue',
+    y: 'yellow',
+    g: 'green',
+    p: 'purple',
+    o: 'orange',
+    c: 'cyan',
+    k: 'pink',
+};
+
 function handleKeydown(e) {
-    if (e.key === 'Enter' && !gameOver.value && canSubmit.value) handleSubmitGuess();
+    if (gameOver.value) return;
+    // Ignore when typing in an input/textarea
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+    if (e.key === 'Enter' && canSubmit.value) {
+        handleSubmitGuess();
+        return;
+    }
+
+    const color = COLOR_KEYS[e.key.toLowerCase()];
+    if (color && gameConfig.value.COLORS.includes(color)) {
+        handleAddColor(color);
+        return;
+    }
+
+    const len = gameConfig.value.CODE_LENGTH;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        if (e.key === 'ArrowRight') {
+            selectedPegIndex.value = selectedPegIndex.value === null ? 0 : (selectedPegIndex.value + 1) % len;
+        } else {
+            selectedPegIndex.value = selectedPegIndex.value === null ? len - 1 : ((selectedPegIndex.value - 1) + len) % len;
+        }
+        return;
+    }
+
+    if (e.key === 'Backspace' || e.key === 'Delete') {
+        if (selectedPegIndex.value !== null) {
+            handleRemoveAt(selectedPegIndex.value);
+        }
+        return;
+    }
+
+    if (e.key === 'Escape') {
+        selectedPegIndex.value = null;
+    }
 }
 
 // ── Mount ──────────────────────────────────────────────────────────────────

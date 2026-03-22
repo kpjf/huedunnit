@@ -37,7 +37,6 @@ function handleClear() {
 <style scoped>
 .input-section {
     padding: 18px;
-    border: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
     align-items: center;

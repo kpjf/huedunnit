@@ -8,6 +8,17 @@ defineProps({
 const emit = defineEmits(['select']);
 const { tapColor } = useHaptics();
 
+const KEY_HINTS = {
+    red: 'R',
+    blue: 'B',
+    yellow: 'Y',
+    green: 'G',
+    purple: 'P',
+    orange: 'O',
+    cyan: 'C',
+    pink: 'K',
+};
+
 function handleSelect(color) {
     tapColor();
     emit('select', color);
@@ -22,7 +33,9 @@ function handleSelect(color) {
             class="color-btn peg"
             :class="color"
             @click="handleSelect(color)"
-        />
+        >
+            <span v-if="KEY_HINTS[color]" class="key-hint">{{ KEY_HINTS[color] }}</span>
+        </button>
     </div>
 </template>
 
@@ -42,6 +55,7 @@ function handleSelect(color) {
     cursor: pointer;
     transition: all 0.15s;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+    position: relative;
 }
 
 .color-btn:hover {
@@ -56,4 +70,16 @@ function handleSelect(color) {
         0 0 0 4px var(--text-primary);
 }
 
+.key-hint {
+    position: absolute;
+    bottom: 2px;
+    right: 3px;
+    font-size: 0.55em;
+    font-weight: 700;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.75);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    letter-spacing: 0;
+}
 </style>
