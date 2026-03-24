@@ -29,6 +29,14 @@ const routes = [
         path: '/story',
         component: () => import('./pages/Story.vue'),
     },
+    {
+        path: '/verify-email',
+        component: () => import('./pages/VerifyEmail.vue'),
+    },
+    {
+        path: '/reset-password',
+        component: () => import('./pages/ResetPassword.vue'),
+    },
 ];
 
 const router = createRouter({

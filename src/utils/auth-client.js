@@ -107,6 +107,9 @@ export const authApi = {
   logoutAll: () => client.post('/auth/logout-all'),
   refresh: (refreshToken) => client.post('/auth/refresh', { refreshToken }),
   me: () => client.get('/auth/me'),
+  verifyEmail: (token) => client.post('/auth/verify-email', { token }),
+  forgotPassword: (email) => client.post('/auth/forgot-password', { email }),
+  resetPassword: (token, password) => client.post('/auth/reset-password', { token, password }),
 }
 
 export const userApi = {
