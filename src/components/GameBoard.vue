@@ -64,6 +64,15 @@ watch(() => props.maxGuesses, computeSizes);
 
 <template>
     <div class="game-board">
+        <div class="peg-legend">
+            <span class="legend-item">
+                <span class="legend-dot legend-dot--exact"></span>right color &amp; position
+            </span>
+            <span class="legend-sep">·</span>
+            <span class="legend-item">
+                <span class="legend-dot legend-dot--color"></span>right color only
+            </span>
+        </div>
         <div
             ref="containerEl"
             class="guesses-container"
@@ -95,6 +104,44 @@ watch(() => props.maxGuesses, computeSizes);
     display: flex;
     flex-direction: column;
     align-items: stretch;
+}
+
+.peg-legend {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding-bottom: 8px;
+    flex-shrink: 0;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.legend-sep {
+    color: var(--text-secondary);
+    opacity: 0.5;
+}
+
+.legend-dot {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+.legend-dot--exact {
+    background: var(--key-peg-black);
+}
+
+.legend-dot--color {
+    background: var(--key-peg-white);
+    border: 1px solid var(--key-peg-white-border);
 }
 
 .guesses-container {

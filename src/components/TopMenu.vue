@@ -2,9 +2,9 @@
 import AppButton from './AppButton.vue';
 
 defineProps({
-    darkMode: {
-        type: Boolean,
-        required: true,
+    theme: {
+        type: String,
+        default: 'mastermind',
     },
     timer: {
         type: String,
@@ -16,7 +16,7 @@ defineProps({
     },
 });
 
-defineEmits(['toggle-dark-mode', 'new-game', 'share']);
+defineEmits(['toggle-dark-mode', 'new-game', 'share', 'how-to-play']);
 </script>
 
 <template>
@@ -30,7 +30,7 @@ defineEmits(['toggle-dark-mode', 'new-game', 'share']);
                         viewBox="0 0 20 20"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
-                        :style="{ stroke: darkMode ? '#fff' : '#111' }"
+                        style="stroke: var(--text-primary)"
                     >
                         <path
                             d="M13 4L7 10L13 16"
@@ -45,6 +45,25 @@ defineEmits(['toggle-dark-mode', 'new-game', 'share']);
             <div class="menu-right">
                 <span v-if="timer" class="timer">{{ timer }}</span>
                 <AppButton
+                    variant="icon"
+                    title="How to play"
+                    @click="$emit('how-to-play')"
+                >
+                    <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        style="color: var(--text-primary)"
+                    >
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.75"/>
+                        <path d="M9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5V13.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+                        <circle cx="12" cy="16.5" r="0.75" fill="currentColor" stroke="currentColor" stroke-width="0.5"/>
+                    </svg>
+                </AppButton>
+
+                <AppButton
                     v-if="showShare"
                     variant="icon"
                     title="Share results"
@@ -56,7 +75,7 @@ defineEmits(['toggle-dark-mode', 'new-game', 'share']);
                         viewBox="0 0 24 24"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
-                        :style="{ color: darkMode ? '#fff' : '#111' }"
+                        style="color: var(--text-primary)"
                     >
                         <circle cx="18" cy="5" r="3" stroke="currentColor" stroke-width="1.75"/>
                         <circle cx="6" cy="12" r="3" stroke="currentColor" stroke-width="1.75"/>
@@ -65,23 +84,7 @@ defineEmits(['toggle-dark-mode', 'new-game', 'share']);
                         <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
                     </svg>
                 </AppButton>
-                <AppButton
-                    variant="icon"
-                    title="Toggle dark mode"
-                    @click="$emit('toggle-dark-mode')"
-                >
-                    <svg
-                        width="18"
-                        height="22"
-                        viewBox="0 0 18 22"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        :style="{ color: darkMode ? '#fff' : '#111' }"
-                    >
-                        <rect x="1" y="1" width="16" height="20" rx="3" stroke="currentColor" stroke-width="1.5"/>
-                        <rect x="4" :y="darkMode ? 11 : 3" width="10" height="8" rx="2" fill="currentColor"/>
-                    </svg>
-                </AppButton>
+
             </div>
         </div>
     </div>
@@ -119,8 +122,9 @@ defineEmits(['toggle-dark-mode', 'new-game', 'share']);
 
 
 .timer {
+    font-family: "Archivo Black", sans-serif;
     font-size: 1.1em;
-    font-weight: 700;
+    font-weight: 400;
     font-variant-numeric: tabular-nums;
     color: var(--text-primary);
     letter-spacing: 0.02em;

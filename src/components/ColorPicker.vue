@@ -82,4 +82,10 @@ function handleSelect(color) {
     pointer-events: none;
     letter-spacing: 0;
 }
+
+@media (hover: none) and (pointer: coarse) {
+    .key-hint {
+        display: none;
+    }
+}
 </style>

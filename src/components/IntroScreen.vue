@@ -14,7 +14,15 @@ const props = defineProps({
     completedModes: { type: Object, default: () => ({}) },
 });
 
-const emit = defineEmits(['play-daily', 'play-random', 'story', 'login', 'signup', 'logout', 'stats']);
+const emit = defineEmits([
+    'play-daily',
+    'play-random',
+    'story',
+    'login',
+    'signup',
+    'logout',
+    'stats',
+]);
 </script>
 
 <template>
@@ -27,7 +35,7 @@ const emit = defineEmits(['play-daily', 'play-random', 'story', 'login', 'signup
                     </slot>
                 </div>
 
-                <h1 class="intro-title">HEXCode</h1>
+                <h1 class="intro-title">HEXCODE</h1>
                 <p class="intro-description">Break the secret code. A new puzzle every day.</p>
 
                 <div class="mode-toggle">
@@ -55,12 +63,7 @@ const emit = defineEmits(['play-daily', 'play-random', 'story', 'login', 'signup
                     >
                         Random Game
                     </AppButton>
-                    <AppButton
-                        variant="ghost"
-                        size="lg"
-                        on-dark
-                        @click="emit('story')"
-                    >
+                    <AppButton variant="ghost" size="lg" on-dark @click="emit('story')">
                         📖 Story Mode
                     </AppButton>
                 </div>
@@ -109,7 +112,7 @@ const emit = defineEmits(['play-daily', 'play-random', 'story', 'login', 'signup
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background-color: #111;
+    background-color: var(--board-bg);
 }
 
 .intro-card {
@@ -162,12 +165,12 @@ const emit = defineEmits(['play-daily', 'play-random', 'story', 'login', 'signup
 .intro-title {
     font-size: 2em;
     font-weight: 700;
-    color: #fff;
+    color: var(--text-primary);
     margin-bottom: 8px;
 }
 
 .intro-description {
-    color: #fff;
+    color: var(--text-primary);
     font-size: 1.2rem;
     max-width: 25ch;
     margin: 0 auto 20px auto;
@@ -208,7 +211,7 @@ const emit = defineEmits(['play-daily', 'play-random', 'story', 'login', 'signup
 .date-value {
     font-size: 0.95em;
     font-weight: 600;
-    color: #fff;
+    color: var(--text-primary);
 }
 
 .intro-actions {

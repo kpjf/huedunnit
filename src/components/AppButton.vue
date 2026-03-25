@@ -1,9 +1,9 @@
 <script setup>
 defineProps({
     variant: { type: String, default: 'primary' }, // primary | secondary | ghost | icon
-    size: { type: String, default: 'md' },          // sm | md | lg
+    size: { type: String, default: 'md' }, // sm | md | lg
     full: { type: Boolean, default: false },
-    onDark: { type: Boolean, default: false },       // button sits on a dark background
+    onDark: { type: Boolean, default: false }, // button sits on a dark background
     completed: { type: Boolean, default: false },
     type: { type: String, default: 'button' },
 });
@@ -29,8 +29,8 @@ defineProps({
     align-items: center;
     justify-content: center;
     border-radius: 100px;
-    font-weight: 600;
-    font-family: inherit;
+    font-weight: 400;
+    font-family: "Archivo Black", sans-serif;
     cursor: pointer;
     transition: all 0.15s;
     border: none;
@@ -39,61 +39,64 @@ defineProps({
 }
 
 /* Sizes */
-.app-btn--lg { padding: 12px 24px; font-size: 1rem; }
-.app-btn--md { padding: 11px 22px; font-size: 0.95em; }
-.app-btn--sm { padding: 8px 20px; font-size: 0.875em; }
+.app-btn--lg {
+    padding: 12px 24px;
+    font-size: 1rem;
+}
+.app-btn--md {
+    padding: 11px 22px;
+    font-size: 0.95em;
+}
+.app-btn--sm {
+    padding: 8px 20px;
+    font-size: 0.875em;
+}
 
 /* Full width */
-.app-btn--full { width: 100%; }
+.app-btn--full {
+    width: 100%;
+}
 
 /* Completed */
-.app-btn--completed { opacity: 0.5; }
+.app-btn--completed {
+    opacity: 0.5;
+}
 
 /* Disabled (shared) */
-.app-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.app-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
 
 /* --- Primary: solid, high contrast --- */
 .app-btn--primary {
-    background: var(--text-primary);
-    color: var(--bg-primary);
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-color);
 }
-.app-btn--primary:hover:not(:disabled) { opacity: 0.8; }
-
-/* Primary on dark background (intro screen) */
-.app-btn--primary.app-btn--on-dark {
-    background: #fff;
-    color: #000;
+.app-btn--primary:hover:not(:disabled) {
+    opacity: 0.8;
 }
 
 /* --- Secondary: subtle fill --- */
 .app-btn--secondary {
-    background: var(--bg-secondary);
-    color: var(--text-primary);
-    border: 1px solid var(--border-color);
+    background: var(--btn-secondary-bg);
+    color: var(--btn-secondary-color);
+    border: 1px solid var(--btn-secondary-border);
 }
 .app-btn--secondary:hover:not(:disabled) {
-    background: var(--bg-tertiary);
+    background: var(--btn-secondary-bg-hover);
     border-color: var(--text-secondary);
 }
 
 /* --- Ghost: transparent outline --- */
 .app-btn--ghost {
     background: transparent;
-    color: var(--text-secondary);
-    border: 1px solid var(--border-color);
+    color: var(--btn-ghost-color);
+    border: 1px solid var(--btn-ghost-border);
 }
 .app-btn--ghost:hover:not(:disabled) {
-    color: var(--text-primary);
+    color: var(--btn-ghost-color-hover);
     border-color: var(--text-secondary);
-}
-
-/* Ghost on dark background */
-.app-btn--ghost.app-btn--on-dark {
-    color: #fff;
-    border-color: rgba(255, 255, 255, 0.4);
-}
-.app-btn--ghost.app-btn--on-dark:hover:not(:disabled) {
-    border-color: #fff;
 }
 
 /* --- Icon: bare icon button --- */
@@ -104,5 +107,7 @@ defineProps({
     padding: 8px;
     border-radius: 8px;
 }
-.app-btn--icon:hover:not(:disabled) { opacity: 0.7; }
+.app-btn--icon:hover:not(:disabled) {
+    opacity: 0.7;
+}
 </style>

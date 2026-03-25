@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import AppButton from './AppButton.vue';
 import { useShareImage } from '../composables/useShareImage.js';
 
@@ -45,6 +45,9 @@ const heading = computed(() => {
     return 'Close call!';
 });
 
+const dialogEl = ref(null);
+onMounted(() => dialogEl.value?.showModal());
+
 const shared = ref(false);
 const { shareResults } = useShareImage();
 
@@ -63,9 +66,8 @@ async function handleShare() {
 </script>
 
 <template>
-    <div class="outro-container">
-        <div class="outro-card">
-            <div class="outro-icon">{{ won ? '🎉' : '😞' }}</div>
+    <dialog ref="dialogEl" @cancel.prevent>
+        <div class="outro-icon">{{ won ? '🎉' : '😞' }}</div>
 
             <h1 class="outro-title">{{ heading }}</h1>
             <p class="outro-subtitle">
@@ -145,27 +147,27 @@ async function handleShare() {
                     <AppButton variant="ghost" size="sm" full @click="$emit('play-again')">Play Again</AppButton>
                 </div>
             </template>
-        </div>
-    </div>
+    </dialog>
 </template>
 
 <style scoped>
-.outro-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 20px;
-}
-
-.outro-card {
-    background: var(--bg-primary);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+dialog {
+    background: var(--bg-modal);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
     padding: 40px 32px;
     max-width: 400px;
-    width: 100%;
+    width: 90%;
     text-align: center;
-    animation: slideIn 0.3s ease-out;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.5);
 }
 
 .outro-icon {
@@ -310,7 +312,7 @@ async function handleShare() {
 }
 
 @media (max-width: 480px) {
-    .outro-card {
+    dialog {
         padding: 32px 24px;
     }
 

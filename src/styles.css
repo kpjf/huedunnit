@@ -5,6 +5,7 @@
 }
 
 :root {
+    /* UI */
     --bg-primary: #ffffff;
     --bg-secondary: #f5f5f5;
     --bg-tertiary: #fafafa;
@@ -13,9 +14,42 @@
     --border-color: #f0f0f0;
     --menu-bg: #ffffff;
     --menu-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+    /* Pegs */
+    --peg-red: #d94444;
+    --peg-blue: #3366cc;
+    --peg-yellow: #ccaa00;
+    --peg-green: #33a85a;
+    --peg-purple: #8844cc;
+    --peg-orange: #e07820;
+    --peg-cyan: #1199aa;
+    --peg-pink: #cc3399;
+    --peg-lime: #55cc22;
+    --peg-maroon: #882222;
+    --peg-bg: #ffffff;
+    --board-bg: #ffffff;
+
+    /* Key pegs */
+    --key-peg-black: #2d2d2d;
+    --key-peg-white: #b0b0b0;
+    --key-peg-white-border: #888;
+    --key-peg-empty-border: #ccc;
+    --peg-empty-border: #ccc;
+
+    /* Buttons */
+    --btn-primary-bg: #333333;
+    --btn-primary-color: #ffffff;
+    --btn-secondary-bg: #f5f5f5;
+    --btn-secondary-color: #333333;
+    --btn-secondary-border: #f0f0f0;
+    --btn-secondary-bg-hover: #fafafa;
+    --btn-ghost-color: #999999;
+    --btn-ghost-border: #f0f0f0;
+    --btn-ghost-color-hover: #333333;
 }
 
 html.dark-mode {
+    /* UI */
     --bg-primary: #111111;
     --bg-secondary: #2a2a2a;
     --bg-tertiary: #333333;
@@ -24,10 +58,72 @@ html.dark-mode {
     --border-color: #3a3a3a;
     --menu-bg: #242424;
     --menu-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --board-bg: #111111;
+
+    /* Key pegs */
+    --key-peg-black: #f0f0f0;
+    --key-peg-white: #3a3a3a;
+    --key-peg-white-border: #666;
+    --key-peg-empty-border: #4a4a4a;
+    --peg-empty-border: #4a4a4a;
+
+    /* Buttons */
+    --btn-primary-bg: #f5f5f5;
+    --btn-primary-color: #111111;
+    --btn-secondary-bg: #2a2a2a;
+    --btn-secondary-color: #f5f5f5;
+    --btn-secondary-border: #3a3a3a;
+    --btn-secondary-bg-hover: #333333;
+    --btn-ghost-color: #a0a0a0;
+    --btn-ghost-border: #3a3a3a;
+    --btn-ghost-color-hover: #f5f5f5;
+}
+
+html.mastermind-mode {
+    /* UI */
+    --bg-modal: #fff;
+    --bg-primary: #909090;
+    --bg-secondary: #7d7d7d;
+    --bg-tertiary: #858585;
+    --text-primary: #111111;
+    --text-secondary: #444444;
+    --border-color: #6a6a6a;
+    --menu-bg: #1a1a1a;
+    --menu-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    --board-bg: #909090;
+
+    /* Pegs - vivid, matching the classic board game */
+    --peg-red: #e63232;
+    --peg-blue: #1e44d4;
+    --peg-yellow: #f0cc00;
+    --peg-green: #22bb44;
+    --peg-purple: #8833cc;
+    --peg-orange: #f07820;
+    --peg-cyan: #00aacc;
+    --peg-pink: #dd1188;
+
+    /* Key pegs */
+    --key-peg-black: #111111;
+    --key-peg-white: #e8e0d0;
+    --key-peg-white-border: #c0b8a0;
+    --key-peg-empty-border: #5a5a5a;
+    --peg-empty-border: #5a5a5a;
+
+    /* Buttons */
+    --btn-primary-bg: #111111;
+    --btn-primary-color: #ffffff;
+    --btn-secondary-bg: #2a2a2a;
+    --btn-secondary-color: #f5f5f5;
+    --btn-secondary-border: #444444;
+    --btn-secondary-bg-hover: #333333;
+    --btn-ghost-color: #111111;
+    --btn-ghost-border: #444444;
+    --btn-ghost-color-hover: #000000;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
     background: var(--bg-primary);
     height: 100vh;
     height: 100dvh;
@@ -40,6 +136,16 @@ body {
         color 0.3s ease;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Archivo Black', sans-serif;
+    font-weight: 400;
+}
+
 #app {
     height: 100%;
     display: flex;
@@ -47,7 +153,7 @@ body {
 }
 
 .container {
-    background: var(--bg-primary);
+    background: var(--board-bg);
     /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08); */
     max-width: 520px;
     width: 100%;
@@ -80,13 +186,12 @@ body {
     }
 }
 
-
 /* Pegs */
 .peg {
     width: var(--peg-size, 50px);
     height: var(--peg-size, 50px);
     flex-shrink: 0;
-    background-color: #fff;
+    background-color: var(--peg-bg);
     border: none;
     cursor: pointer;
     transition:
@@ -101,12 +206,8 @@ body {
 
 .peg.empty {
     background: transparent;
-    border: 2px solid #ccc;
+    border: 2px solid var(--peg-empty-border);
     cursor: default;
-}
-
-html.dark-mode .peg.empty {
-    border: 2px solid #4a4a4a;
 }
 
 .peg.empty:hover {
@@ -120,72 +221,49 @@ html.dark-mode .peg.empty {
 }
 
 .key-peg.black {
-    background: #2d2d2d;
-}
-
-html.dark-mode .key-peg.black {
-    background: #f0f0f0;
+    background: var(--key-peg-black);
 }
 
 .key-peg.white {
-    background: #b0b0b0;
-    border: 1px solid #888;
-}
-
-html.dark-mode .key-peg.white {
-    background: #3a3a3a;
-    border: 1px solid #666;
+    background: var(--key-peg-white);
+    border: 1px solid var(--key-peg-white-border);
 }
 
 .key-peg.empty {
     background: transparent;
-    border: 1px solid #ccc;
+    border: 1px solid var(--key-peg-empty-border);
 }
 
-html.dark-mode .key-peg.empty {
-    border: 1px solid #4a4a4a;
-    background-color: transparent;
-}
-
-/* Color Pegs - 8 Contrasting Colors */
+/* Color Pegs */
 .peg.red {
-    background: #d94444;
+    background: var(--peg-red);
 }
-
 .peg.blue {
-    background: #3366cc;
+    background: var(--peg-blue);
 }
-
 .peg.yellow {
-    background: #ccaa00;
+    background: var(--peg-yellow);
 }
-
 .peg.green {
-    background: #33a85a;
+    background: var(--peg-green);
 }
-
 .peg.purple {
-    background: #8844cc;
+    background: var(--peg-purple);
 }
-
 .peg.orange {
-    background: #e07820;
+    background: var(--peg-orange);
 }
-
 .peg.cyan {
-    background: #1199aa;
+    background: var(--peg-cyan);
 }
-
 .peg.pink {
-    background: #cc3399;
+    background: var(--peg-pink);
 }
-
 .peg.lime {
-    background: #55cc22;
+    background: var(--peg-lime);
 }
-
 .peg.maroon {
-    background: #882222;
+    background: var(--peg-maroon);
 }
 
 /* Responsive */
@@ -193,6 +271,4 @@ html.dark-mode .key-peg.empty {
     body {
         padding: 0;
     }
-
-
 }

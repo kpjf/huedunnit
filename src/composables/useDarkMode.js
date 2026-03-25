@@ -1,14 +1,25 @@
-import { ref, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
+
+const THEMES = ['light', 'dark', 'mastermind'];
 
 export function useDarkMode() {
-    const isDark = ref(localStorage.getItem('mastermind-darkMode') !== 'false');
+    const stored = localStorage.getItem('mastermind-theme');
+    const initial = THEMES.includes(stored) ? stored : 'mastermind';
+    const theme = ref(initial);
 
-    watch(isDark, (val) => {
-        document.documentElement.classList.toggle('dark-mode', val);
-        localStorage.setItem('mastermind-darkMode', String(val));
+    watch(theme, (val) => {
+        document.documentElement.classList.remove('dark-mode', 'mastermind-mode');
+        if (val === 'dark') document.documentElement.classList.add('dark-mode');
+        if (val === 'mastermind') document.documentElement.classList.add('mastermind-mode');
+        localStorage.setItem('mastermind-theme', val);
     }, { immediate: true });
 
-    function toggleDarkMode() { isDark.value = !isDark.value; }
+    const isDark = computed(() => theme.value !== 'light');
 
-    return { isDark, toggleDarkMode };
+    function toggleDarkMode() {
+        const idx = THEMES.indexOf(theme.value);
+        theme.value = THEMES[(idx + 1) % THEMES.length];
+    }
+
+    return { theme, isDark, toggleDarkMode };
 }

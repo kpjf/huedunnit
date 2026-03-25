@@ -10,6 +10,7 @@ import OutroScreen from '../components/OutroScreen.vue';
 import StatsScreen from '../components/StatsScreen.vue';
 import AppButton from '../components/AppButton.vue';
 import ShareModal from '../components/ShareModal.vue';
+import HowToPlayModal from '../components/HowToPlayModal.vue';
 import { useGame } from '../game/useGame.js';
 import { useHaptics } from '../composables/useHaptics.js';
 import { saveDailyState, loadDailyState } from '../game/useDailyStorage.js';
@@ -87,9 +88,10 @@ const { completeLevel, useAttempt, awardCoins } = useStoryMode();
 
 const screen = ref('game');
 const animateBoard = ref(false);
-const { isDark: darkMode, toggleDarkMode } = useDarkMode();
+const { theme, isDark: darkMode, toggleDarkMode } = useDarkMode();
 const showSeedModal = ref(false);
 const showShareModal = ref(false);
+const showHowToPlay = ref(false);
 const showConfetti = ref(false);
 const currentMode = ref('classic');
 const currentStats = ref(null);
@@ -337,6 +339,7 @@ onMounted(async () => {
         await handlePlayDaily(mode || 'classic');
     }
     if (!gameOver.value && screen.value === 'game') startTimer();
+    if (!localStorage.getItem('hexcode_htp_seen')) showHowToPlay.value = true;
 });
 
 onUnmounted(() => {
@@ -375,12 +378,13 @@ onUnmounted(() => {
 
     <template v-else>
         <TopMenu
-            :dark-mode="darkMode"
+            :theme="theme"
             :timer="!gameOver || screen === 'review' ? formattedTime : null"
             :show-share="screen === 'review'"
             @toggle-dark-mode="toggleDarkMode"
             @new-game="handleNewGame"
             @share="showShareModal = true"
+            @how-to-play="showHowToPlay = true"
         />
 
         <div class="container">
@@ -437,6 +441,11 @@ onUnmounted(() => {
             @share-pattern="handleSharePattern"
             @share-full="handleShareFull"
             @close="showShareModal = false"
+        />
+
+        <HowToPlayModal
+            :visible="showHowToPlay"
+            @close="showHowToPlay = false"
         />
     </template>
 
