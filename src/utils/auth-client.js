@@ -97,7 +97,7 @@ class AuthClient {
   }
 }
 
-const client = new AuthClient(import.meta.env.VITE_AUTH_SERVICE_URL)
+const client = new AuthClient(`${import.meta.env.VITE_AUTH_SERVICE_URL}/${import.meta.env.VITE_APP_SLUG}`)
 const dataClient = new AuthClient(import.meta.env.VITE_DATA_API_URL)
 
 export const authApi = {
