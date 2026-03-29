@@ -19,12 +19,13 @@ function loadAll() {
 }
 
 function yesterday(dateStr) {
-    const d = new Date(dateStr + 'T00:00:00');
+    const d = new Date(dateStr.slice(0, 10) + 'T00:00:00');
     d.setDate(d.getDate() - 1);
     return d.toISOString().slice(0, 10);
 }
 
 export function recordResult(date, mode, won, guessCount, durationSeconds, solution, guesses) {
+    date = date.slice(0, 10);
     const all = loadAll();
     const stats = all[mode] ?? emptyModeStats();
 
@@ -60,6 +61,7 @@ export function loadStats(mode) {
 }
 
 export function checkAndExpireStreak(date, mode) {
+    date = date.slice(0, 10);
     const all = loadAll();
     const stats = all[mode] ?? emptyModeStats();
 
