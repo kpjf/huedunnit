@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from './stores/auth.js';
 
+import { usePostHog } from '@/composables/usePostHog';
+
 // Auth routes render nothing — AuthDialog in App.vue handles the UI
 const EmptyView = { render: () => null };
 
@@ -51,6 +53,8 @@ const router = createRouter({
     history: createWebHistory(),
     routes,
 });
+
+const { posthog } = usePostHog();
 
 router.beforeEach(async (to, from, next) => {
     const authStore = useAuthStore();
