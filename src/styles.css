@@ -123,7 +123,7 @@ html.mastermind-mode {
 
 body {
     font-family: 'Raleway', sans-serif;
-    font-weight: 300;
+    font-weight: 400;
     background: var(--bg-primary);
     height: 100vh;
     height: 100dvh;
@@ -194,9 +194,21 @@ h6 {
     background-color: var(--peg-bg);
     border: none;
     cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 1px 2px 3px #000000aa;
     transition:
         transform 0.15s,
         box-shadow 0.15s;
+    position: relative;
+}
+
+.peg:not(.empty)::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 32%, rgba(255, 255, 255, 0.45) 0%, transparent 62%);
+    pointer-events: none;
 }
 
 .peg:hover:not(.empty) {
@@ -218,6 +230,10 @@ h6 {
     /* fills its grid cell — sized by .key-pegs grid */
     border: none;
     background: transparent;
+    border-radius: 50%;
+
+    width: 24px;
+    height: 24px;
 }
 
 .key-peg.black {

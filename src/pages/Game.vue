@@ -297,6 +297,7 @@ function shareOpts() {
         maxGuesses: gameConfig.value.MAX_GUESSES,
         isDaily: currentSeed.value?.startsWith(dailySeed() + '-'),
         elapsedSeconds: elapsedSeconds.value,
+        theme: theme.value,
     };
 }
 

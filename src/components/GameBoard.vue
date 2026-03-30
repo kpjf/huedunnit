@@ -64,15 +64,6 @@ watch(() => props.maxGuesses, computeSizes);
 
 <template>
     <div class="game-board">
-        <div class="peg-legend">
-            <span class="legend-item">
-                <span class="legend-dot legend-dot--exact"></span>right color &amp; position
-            </span>
-            <span class="legend-sep">·</span>
-            <span class="legend-item">
-                <span class="legend-dot legend-dot--color"></span>right color only
-            </span>
-        </div>
         <div
             ref="containerEl"
             class="guesses-container"

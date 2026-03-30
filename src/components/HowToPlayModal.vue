@@ -63,13 +63,15 @@ function handleCancel(e) {
                     <div class="peg cyan" style="--peg-size: 32px"></div>
                     <div class="peg pink" style="--peg-size: 32px"></div>
                 </div>
-                <div class="example-key-pegs">
-                    <div class="key-peg empty"></div>
-                    <div class="key-peg empty"></div>
-                    <div class="key-peg empty"></div>
-                    <div class="key-peg empty"></div>
+                <div>
+                    <div class="example-key-pegs">
+                        <div class="key-peg empty"></div>
+                        <div class="key-peg empty"></div>
+                        <div class="key-peg empty"></div>
+                        <div class="key-peg empty"></div>
+                    </div>
+                    <p class="example-label">No pegs — none of these colors are in the code</p>
                 </div>
-                <p class="example-label">No pegs — none of these colors are in the code</p>
             </div>
 
             <!-- Row 2: White pegs -->
@@ -80,13 +82,17 @@ function handleCancel(e) {
                     <div class="peg yellow" style="--peg-size: 32px"></div>
                     <div class="peg orange" style="--peg-size: 32px"></div>
                 </div>
-                <div class="example-key-pegs">
-                    <div class="key-peg white"></div>
-                    <div class="key-peg white"></div>
-                    <div class="key-peg empty"></div>
-                    <div class="key-peg empty"></div>
+                <div>
+                    <div class="example-key-pegs">
+                        <div class="key-peg white"></div>
+                        <div class="key-peg white"></div>
+                        <div class="key-peg empty"></div>
+                        <div class="key-peg empty"></div>
+                    </div>
+                    <p class="example-label">
+                        <strong>White</strong> — right color, wrong position
+                    </p>
                 </div>
-                <p class="example-label"><strong>White</strong> — right color, wrong position</p>
             </div>
 
             <!-- Row 3: All black (fully correct) -->
@@ -97,15 +103,17 @@ function handleCancel(e) {
                     <div class="peg yellow" style="--peg-size: 32px"></div>
                     <div class="peg green" style="--peg-size: 32px"></div>
                 </div>
-                <div class="example-key-pegs">
-                    <div class="key-peg black"></div>
-                    <div class="key-peg black"></div>
-                    <div class="key-peg black"></div>
-                    <div class="key-peg black"></div>
+                <div>
+                    <div class="example-key-pegs">
+                        <div class="key-peg black"></div>
+                        <div class="key-peg black"></div>
+                        <div class="key-peg black"></div>
+                        <div class="key-peg black"></div>
+                    </div>
+                    <p class="example-label">
+                        <strong>Black</strong> — right color <em>and</em> position
+                    </p>
                 </div>
-                <p class="example-label">
-                    <strong>Black</strong> — right color <em>and</em> position
-                </p>
             </div>
         </div>
 
@@ -191,13 +199,15 @@ dialog h3 {
 }
 
 .example-key-pegs {
-    width: 28px;
-    height: 28px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+    display: flex;
     gap: 3px;
     flex-shrink: 0;
+    margin-bottom: 5px;
+
+    .key-peg {
+        width: 12px;
+        height: 12px;
+    }
 }
 
 .example-label {

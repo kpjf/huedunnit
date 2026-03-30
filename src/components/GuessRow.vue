@@ -55,53 +55,96 @@ function runRevealAnimation(animateGuessPegs = false) {
     if (animateGuessPegs && props.code) {
         revealedGuessPegs.value = new Set();
         for (let i = 0; i < props.codeLength; i++) {
-            timers.push(setTimeout(() => {
-                revealedGuessPegs.value = new Set([...revealedGuessPegs.value, i]);
-                pegFlipIndex.value = i;
-            }, i * 200));
-            timers.push(setTimeout(() => {
-                if (pegFlipIndex.value === i) pegFlipIndex.value = -1;
-            }, i * 200 + 200));
+            timers.push(
+                setTimeout(() => {
+                    revealedGuessPegs.value = new Set([...revealedGuessPegs.value, i]);
+                    pegFlipIndex.value = i;
+                }, i * 200),
+            );
+            timers.push(
+                setTimeout(
+                    () => {
+                        if (pegFlipIndex.value === i) pegFlipIndex.value = -1;
+                    },
+                    i * 200 + 200,
+                ),
+            );
         }
-        timers.push(setTimeout(() => { revealedGuessPegs.value = null; }, props.codeLength * 200 + 300));
+        timers.push(
+            setTimeout(
+                () => {
+                    revealedGuessPegs.value = null;
+                },
+                props.codeLength * 200 + 300,
+            ),
+        );
     }
 
     for (let i = 0; i < props.codeLength; i++) {
-        timers.push(setTimeout(() => { flippingOut.value = i; }, i * 200));
-        timers.push(setTimeout(() => {
-            revealed.value.push(i);
-            flippingOut.value = -1;
-            flippingIn.value = i;
-        }, i * 200 + 150));
-        timers.push(setTimeout(() => { flippingIn.value = -1; }, i * 200 + 300));
+        timers.push(
+            setTimeout(() => {
+                flippingOut.value = i;
+            }, i * 200),
+        );
+        timers.push(
+            setTimeout(
+                () => {
+                    revealed.value.push(i);
+                    flippingOut.value = -1;
+                    flippingIn.value = i;
+                },
+                i * 200 + 150,
+            ),
+        );
+        timers.push(
+            setTimeout(
+                () => {
+                    flippingIn.value = -1;
+                },
+                i * 200 + 300,
+            ),
+        );
     }
 }
 
-watch(() => props.feedback, (newVal, oldVal) => {
-    if (newVal && oldVal === null) {
-        runRevealAnimation();
-    }
-});
+watch(
+    () => props.feedback,
+    (newVal, oldVal) => {
+        if (newVal && oldVal === null) {
+            runRevealAnimation();
+        }
+    },
+);
 
 // Triggered when loading a completed game for review — runs after DOM update so
 // props.feedback is guaranteed to be set for all rows simultaneously.
-watch(() => props.revealAll, (val) => {
-    if (val && props.feedback) {
-        runRevealAnimation(true);
-    }
-}, { flush: 'post' });
-
-watch(() => props.code, (newCode, oldCode) => {
-    if (!props.isActive || !newCode) return;
-    for (let i = 0; i < newCode.length; i++) {
-        if (newCode[i] != null && (oldCode == null || oldCode[i] == null)) {
-            clearTimeout(pegFlipTimer);
-            pegFlipIndex.value = i;
-            pegFlipTimer = setTimeout(() => { pegFlipIndex.value = -1; }, 200);
-            return;
+watch(
+    () => props.revealAll,
+    (val) => {
+        if (val && props.feedback) {
+            runRevealAnimation(true);
         }
-    }
-}, { deep: true });
+    },
+    { flush: 'post' },
+);
+
+watch(
+    () => props.code,
+    (newCode, oldCode) => {
+        if (!props.isActive || !newCode) return;
+        for (let i = 0; i < newCode.length; i++) {
+            if (newCode[i] != null && (oldCode == null || oldCode[i] == null)) {
+                clearTimeout(pegFlipTimer);
+                pegFlipIndex.value = i;
+                pegFlipTimer = setTimeout(() => {
+                    pegFlipIndex.value = -1;
+                }, 200);
+                return;
+            }
+        }
+    },
+    { deep: true },
+);
 
 onUnmounted(() => {
     timers.forEach(clearTimeout);
@@ -124,9 +167,17 @@ const displayKeyPegs = computed(() => {
                 v-for="(color, i) in displayPegs"
                 :key="i"
                 class="peg"
-                :class="[color ?? 'empty', { 'peg-flip-in': i === pegFlipIndex, 'peg-selected': isActive && selectedIndex === i }]"
+                :class="[
+                    color ?? 'empty',
+                    {
+                        'peg-flip-in': i === pegFlipIndex,
+                        'peg-selected': isActive && selectedIndex === i,
+                    },
+                ]"
                 :style="isActive ? { cursor: 'pointer' } : {}"
-                @click="isActive ? (color ? emit('remove-at', i) : emit('select-slot', i)) : undefined"
+                @click="
+                    isActive ? (color ? emit('remove-at', i) : emit('select-slot', i)) : undefined
+                "
             />
         </div>
         <div class="key-pegs">
@@ -150,6 +201,7 @@ const displayKeyPegs = computed(() => {
     gap: 8px;
     opacity: 0.45;
     transition: opacity 0.15s ease;
+    position: relative;
 }
 
 .guess-row.active {
@@ -169,11 +221,7 @@ const displayKeyPegs = computed(() => {
 }
 
 .guess-row .key-pegs {
-    width: var(--peg-size, 50px);
-    height: var(--peg-size, 50px);
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+    display: flex;
     gap: 3px;
     margin-left: 8px;
     flex-shrink: 0;
@@ -181,13 +229,21 @@ const displayKeyPegs = computed(() => {
 }
 
 @keyframes flip-out {
-    from { transform: rotateX(0deg); }
-    to   { transform: rotateX(-90deg); }
+    from {
+        transform: rotateX(0deg);
+    }
+    to {
+        transform: rotateX(-90deg);
+    }
 }
 
 @keyframes flip-in {
-    from { transform: rotateX(90deg); }
-    to   { transform: rotateX(0deg); }
+    from {
+        transform: rotateX(90deg);
+    }
+    to {
+        transform: rotateX(0deg);
+    }
 }
 
 .key-peg.flip-out {
@@ -203,8 +259,13 @@ const displayKeyPegs = computed(() => {
 }
 
 @keyframes peg-pulse {
-    0%, 100% { box-shadow: 0 0 0 2px var(--text-primary); }
-    50% { box-shadow: 0 0 0 4px var(--text-primary); }
+    0%,
+    100% {
+        box-shadow: 0 0 0 2px var(--text-primary);
+    }
+    50% {
+        box-shadow: 0 0 0 4px var(--text-primary);
+    }
 }
 
 .peg.peg-selected {
