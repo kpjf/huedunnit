@@ -123,4 +123,4 @@ Works on all modern browsers:
 
 ## License
 
-Free to use and modify for personal or educational purposes.
+Proprietary. All rights reserved. This is a private game and may not be used, copied, or distributed without permission.
