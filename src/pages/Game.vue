@@ -232,6 +232,7 @@ async function handlePlayDaily(mode) {
         // In-progress local game
         restoreGame(date + '-' + mode, mode, saved);
         screen.value = 'game';
+        return saved.elapsedSeconds || 0;
     } else {
         startSeededGame(date + '-' + mode, mode);
         screen.value = 'game';
@@ -332,14 +333,15 @@ useKeyboardInput({
 // ── Mount ──────────────────────────────────────────────────────────────────
 onMounted(async () => {
     const { type, mode, level } = route.query;
+    let timerResumeFrom = 0;
     if (type === 'story') {
         handlePlayStory(Number(level));
     } else if (type === 'random') {
         handlePlayRandom(mode || 'classic');
     } else {
-        await handlePlayDaily(mode || 'classic');
+        timerResumeFrom = await handlePlayDaily(mode || 'classic') || 0;
     }
-    if (!gameOver.value && screen.value === 'game') startTimer();
+    if (!gameOver.value && screen.value === 'game') startTimer(timerResumeFrom);
     if (!localStorage.getItem('hexcode_htp_seen')) showHowToPlay.value = true;
 });
 

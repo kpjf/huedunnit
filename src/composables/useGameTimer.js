@@ -4,8 +4,8 @@ export function useGameTimer() {
     const elapsedSeconds = ref(0);
     let timerInterval = null;
 
-    function startTimer() {
-        elapsedSeconds.value = 0;
+    function startTimer(from = 0) {
+        elapsedSeconds.value = from;
         timerInterval = setInterval(() => { elapsedSeconds.value++; }, 1000);
     }
 

@@ -26,7 +26,8 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "mcp__linear__list_issue_statuses",
-      "Bash(wc -l /c/Users/keith/dev/emmet-fun/hexcode/src/pages/*.vue /c/Users/keith/dev/emmet-fun/hexcode/src/components/*.vue)"
+      "Bash(wc -l /c/Users/keith/dev/emmet-fun/hexcode/src/pages/*.vue /c/Users/keith/dev/emmet-fun/hexcode/src/components/*.vue)",
+      "mcp__linear__list_comments"
     ]
   }
 }
