@@ -15,6 +15,8 @@ const props = defineProps({
     storyLevel: { type: Object, default: null },
     storyResult: { type: Object, default: null },  // { coinsEarned, stars }
     nextStoryLevelAvailable: { type: Boolean, default: false },
+    theme: { type: String, default: 'mastermind' },
+    elapsedSeconds: { type: Number, default: null },
 });
 
 const emit = defineEmits(['play-again', 'show-stats', 'review', 'next-story-level']);
@@ -57,6 +59,8 @@ async function handleShare() {
         codeLength: props.codeLength,
         maxGuesses: props.maxGuesses,
         isDaily: isDaily.value,
+        elapsedSeconds: props.elapsedSeconds,
+        theme: props.theme,
         onCopied: () => {
             shared.value = true;
             setTimeout(() => { shared.value = false; }, 2000);

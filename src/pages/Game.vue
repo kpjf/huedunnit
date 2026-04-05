@@ -364,6 +364,8 @@ onUnmounted(() => {
         :story-level="storyLevel"
         :story-result="storyResult"
         :next-story-level-available="isStoryMode && storyLevelId < 50"
+        :theme="theme"
+        :elapsed-seconds="elapsedSeconds"
         @play-again="handleNewGame"
         @show-stats="screen = 'stats'"
         @review="screen = 'review'"
