@@ -94,7 +94,7 @@ function maxDistCount(mode) {
                 <div class="distribution">
                     <div class="distribution-title">Guess Distribution</div>
                     <div v-for="n in MODES[activeTab].MAX_GUESSES" :key="n" class="dist-row">
-                        <span class="dist-label">{{ n }}</span>
+                        <span class="dist-label" :class="{ today: todayGuessCount(activeTab) === n }">{{ n }}</span>
                         <div class="dist-bar-wrap">
                             <div
                                 class="dist-bar"
@@ -245,6 +245,10 @@ function maxDistCount(mode) {
     width: 16px;
     text-align: right;
     flex-shrink: 0;
+}
+
+.dist-label.today {
+    color: var(--peg-green);
 }
 
 .dist-bar-wrap {
