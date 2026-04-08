@@ -167,6 +167,8 @@ watch(gameOver, (val) => {
             battleSocket.reportFinished(elapsedSeconds.value);
             showConfetti.value = true;
             celebrate();
+        } else {
+            battleSocket.reportDnf();
         }
         // Don't navigate to outro in battle — wait for leaderboard from server
         return;
@@ -458,6 +460,7 @@ onUnmounted(() => {
     <template v-else>
         <TopMenu
             :theme="theme"
+            :mode="currentMode"
             :timer="!gameOver || screen === 'review' ? formattedTime : null"
             :show-share="screen === 'review'"
             @toggle-dark-mode="toggleDarkMode"
@@ -496,8 +499,11 @@ onUnmounted(() => {
                 />
 
                 <div v-if="isBattleMode" class="battle-bar">
-                    <span v-if="gameOver" class="battle-waiting">
+                    <span v-if="gameOver && stillPlayingCount > 0" class="battle-waiting">
                         Waiting for {{ stillPlayingCount }} player{{ stillPlayingCount !== 1 ? 's' : '' }}...
+                    </span>
+                    <span v-else-if="gameOver" class="battle-waiting">
+                        Finishing up...
                     </span>
                     <span v-else class="battle-playing-count">
                         {{ stillPlayingCount }} still playing

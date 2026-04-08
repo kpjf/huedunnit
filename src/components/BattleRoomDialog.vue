@@ -56,7 +56,7 @@ watch(
 <template>
     <BattleCountdown v-if="view === 'countdown'" />
 
-    <AppDialog max-width="360px" @close="handleClose">
+    <AppDialog v-if="view !== 'countdown'" max-width="360px" @close="handleClose">
         <div class="dialog-body">
             <!-- ── Entry: choose create or join ──────────────────────────── -->
             <template v-if="view === 'entry'">

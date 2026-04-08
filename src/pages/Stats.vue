@@ -1,17 +1,30 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { useStatsStore } from '../stores/stats.js';
 import { MODES } from '../game/config.js';
 import AppButton from '../components/AppButton.vue';
 import { useDarkMode } from '../composables/useDarkMode.js';
+import { loadDailyState } from '../game/useDailyStorage.js';
 
 const router = useRouter();
+const route = useRoute();
 const statsStore = useStatsStore();
 const activeTab = ref('quick');
 useDarkMode();
 
+const today = new Date().toISOString().slice(0, 10);
+
+function todayGuessCount(mode) {
+    const saved = loadDailyState(today, mode);
+    if (!saved || !saved.gameOver) return null;
+    return saved.won ? saved.guesses.length : null;
+}
+
 onMounted(() => {
+    if (['quick', 'classic'].includes(route.query.tab)) {
+        activeTab.value = route.query.tab;
+    }
     if (statsStore.stats === null) {
         statsStore.fetchStats();
     }
@@ -85,6 +98,7 @@ function maxDistCount(mode) {
                         <div class="dist-bar-wrap">
                             <div
                                 class="dist-bar"
+                                :class="{ today: todayGuessCount(activeTab) === n }"
                                 :style="{
                                     width:
                                         ((modeStats(activeTab).distribution[String(n)] ?? 0) /
@@ -254,6 +268,10 @@ function maxDistCount(mode) {
     font-weight: 700;
     color: #fff;
     transition: width 0.4s ease;
+}
+
+.dist-bar.today {
+    background: var(--peg-green);
 }
 
 .loading {
