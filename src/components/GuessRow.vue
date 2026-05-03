@@ -7,11 +7,15 @@ const props = defineProps({
     code: { type: Array, default: null },
     feedback: { type: Object, default: null },
     isActive: { type: Boolean, default: false },
+    isWinning: { type: Boolean, default: false },
     revealAll: { type: Boolean, default: false },
     selectedIndex: { type: Number, default: null },
 });
 
 const emit = defineEmits(['remove-at', 'select-slot']);
+
+const WIN_EMOJIS = ['🏆', '🎯', '✨', '🌟'];
+const winEmoji = WIN_EMOJIS[Math.floor(Math.random() * WIN_EMOJIS.length)];
 
 // null = always show (normal mode); Set = only show indices in set (reveal animation)
 const revealedGuessPegs = ref(null);
@@ -161,7 +165,8 @@ const displayKeyPegs = computed(() => {
 </script>
 
 <template>
-    <div class="guess-row" :class="{ active: isActive, completed: feedback !== null }">
+    <div class="guess-row" :class="{ active: isActive, completed: feedback !== null, winning: isWinning }">
+        <span v-if="isWinning" class="winning-trophy">{{ winEmoji }}</span>
         <div class="guess-pegs">
             <div
                 v-for="(color, i) in displayPegs"
@@ -270,5 +275,31 @@ const displayKeyPegs = computed(() => {
 
 .peg.peg-selected {
     animation: peg-pulse 0.9s ease-in-out infinite;
+}
+
+@keyframes winning-bg {
+    from { background: transparent; }
+    to { background: #FFFFFFAA; }
+}
+
+@keyframes trophy-appear {
+    from { opacity: 0; transform: scale(0.5); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.guess-row.winning {
+    opacity: 1;
+    align-self: stretch;
+    height: auto;
+    min-height: var(--row-height, 60px);
+    padding: 12px 20px;
+    animation: winning-bg 0.5s ease-out 1.2s both;
+}
+
+.winning-trophy {
+    position: absolute;
+    left: 10px;
+    font-size: 2rem;
+    animation: trophy-appear 0.3s ease-out 1.5s both;
 }
 </style>

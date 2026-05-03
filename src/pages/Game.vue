@@ -141,6 +141,7 @@ const currentStats = ref(null);
 const syntheticResult = ref(null);
 const effectiveWon = computed(() => syntheticResult.value !== null ? syntheticResult.value.won : won.value);
 const effectiveGuessCount = computed(() => syntheticResult.value !== null ? syntheticResult.value.guessCount : guesses.value.length);
+const wonRowIndex = computed(() => won.value && guesses.value.length > 0 ? guesses.value.length - 1 : null);
 
 // ── Story mode state ───────────────────────────────────────────────────────
 const isStoryMode = computed(() => route.query.type === 'story');
@@ -243,7 +244,10 @@ watch(
 function handleConfettiDone() {
     showConfetti.value = false;
     if (isBattleMode.value) return; // stay on board — leaderboard will appear
-    if (screen.value === 'game') screen.value = 'outro';
+    if (screen.value === 'game') {
+        // Story wins keep the outro (stars/coins/next-level); all other wins stay on board
+        screen.value = isStoryMode.value ? 'outro' : 'review';
+    }
 }
 
 async function handlePlayDaily(mode) {
@@ -485,6 +489,7 @@ onUnmounted(() => {
                     :code-length="gameConfig.CODE_LENGTH"
                     :animate-rows="animateBoard"
                     :selected-peg-index="selectedPegIndex"
+                    :won-index="wonRowIndex"
                     @remove-at="handleRemoveAt"
                     @select-slot="handleSelectSlot"
                 />
